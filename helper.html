@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIEDAP 산출물 자동완성 도우미</title>
+<style>
+  :root{
+    --accent:#6741d9; --accent-2:#9775fa; --accent-soft:#f3f0ff;
+    --ink:#212529; --muted:#868e96; --line:#e9ecef; --bg:#f8f9fa; --card:#fff;
+    --ok:#2b8a3e; --warn:#e8590c; --warnbg:#fff4e6;
+    --shadow:0 3px 14px rgba(0,0,0,.07); --radius:14px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);line-height:1.7;font-size:15px;
+    font-family:"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,-apple-system,sans-serif}
+  .wrap{max-width:900px;margin:0 auto;padding:0 16px 80px}
+  .hero{background:linear-gradient(135deg,var(--accent-2),var(--accent));color:#fff;
+    padding:32px 24px 26px;border-radius:0 0 24px 24px;box-shadow:0 8px 24px rgba(103,65,217,.25)}
+  .hero h1{margin:0 0 6px;font-size:24px;letter-spacing:-.5px}
+  .hero p{margin:0;opacity:.95;font-size:14px}
+
+  .warn{background:var(--warnbg);border:2px solid #ffa94d;border-radius:var(--radius);
+    padding:16px 18px;margin-top:20px}
+  .warn h3{margin:0 0 8px;font-size:16px;color:var(--warn)}
+  .warn ul{margin:6px 0 0;padding-left:20px} .warn li{margin:4px 0}
+
+  section{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:20px;margin-top:18px;box-shadow:var(--shadow)}
+  h2{display:flex;align-items:center;gap:9px;font-size:18px;margin:0 0 4px}
+  h2 .n{display:inline-flex;width:26px;height:26px;align-items:center;justify-content:center;
+    background:var(--accent);color:#fff;border-radius:7px;font-size:13px;font-weight:800;flex:none}
+  .desc{color:var(--muted);font-size:13px;margin:0 0 14px}
+
+  label{display:block;font-weight:700;font-size:13px;margin:12px 0 5px}
+  input,textarea,select{width:100%;border:1px solid var(--line);border-radius:9px;padding:9px 11px;
+    font-size:14px;font-family:inherit;background:#fff}
+  input:focus,textarea:focus{outline:2px solid var(--accent-2);border-color:transparent}
+  textarea{resize:vertical}
+  .row{display:flex;gap:12px;flex-wrap:wrap}
+  .row>div{flex:1;min-width:150px}
+  .hint{color:var(--muted);font-size:12px;font-weight:400;margin-left:4px}
+
+  .btn{background:var(--accent);color:#fff;border:none;font-weight:800;font-size:14px;
+    padding:10px 18px;border-radius:10px;cursor:pointer;box-shadow:var(--shadow)}
+  .btn:hover{filter:brightness(1.08)}
+  .btn.sm{padding:6px 12px;font-size:12.5px;border-radius:8px;box-shadow:none}
+  .btn.ghost{background:#fff;color:var(--accent);border:1.5px solid var(--accent)}
+  .btnbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+
+  .outhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:18px}
+  .outhead h3{margin:0;font-size:15px}
+  pre.out{background:#f8f9fb;border:1px solid var(--line);border-left:4px solid var(--accent);
+    border-radius:10px;padding:14px;white-space:pre-wrap;word-break:break-word;
+    font-family:inherit;font-size:13.5px;margin:8px 0 0;line-height:1.75}
+  .tip{background:var(--accent-soft);border-radius:10px;padding:11px 14px;font-size:13px;margin-top:12px}
+  .chk{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-top:10px}
+  .chk label{display:flex;gap:9px;align-items:flex-start;font-weight:500;font-size:13.5px;margin:7px 0}
+  .chk input{width:auto;flex:none;margin-top:3px}
+  .saved{color:var(--ok);font-size:12px;font-weight:700;opacity:0;transition:opacity .3s}
+  .saved.on{opacity:1}
+  footer{text-align:center;color:var(--muted);font-size:12.5px;margin-top:30px;line-height:1.8}
+  @media print{ .hero,.warn,.btnbar,.btn,footer{display:none} section{break-inside:avoid;box-shadow:none} }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <h1>📄 AIEDAP 산출물 자동완성 도우미</h1>
+  <p>키워드만 넣으면 붙임4·5·6에 붙여넣을 문장이 만들어집니다 · 설치 없음 · 입력값 자동 저장</p>
+</header>
+
+<div class="wrap">
+
+  <div class="warn">
+    <h3>⚠️ 수업 전에 반드시 준비하세요 (수업이 끝나면 되돌릴 수 없습니다)</h3>
+    <ul>
+      <li>📸 <b>교사가 수업하는 사진 2장</b> — 동료나 학생에게 부탁하세요</li>
+      <li>📸 <b>학생 참여가 확인되는 사진 2장</b> — 얼굴 노출 최소화, 활동 장면 위주</li>
+      <li>📊 <b>학생 응답 구글시트 캡처</b> — 「학생 의견」 증빙으로 그대로 씁니다</li>
+      <li>💻 코스웨어 화면 캡처 1장 — 「활용 자료」로 첨부</li>
+    </ul>
+    <p style="margin:10px 0 0;font-size:13px"><b>붙임6은 수업실천 2차시 안에 보고서 작성까지 포함</b>입니다. 수업 직후 바로 쓰세요.</p>
+  </div>
+
+  <section>
+    <h2><span class="n">1</span> 기본 정보 <span class="saved" id="savedTag">✓ 저장됨</span></h2>
+    <p class="desc">한 번만 입력하면 붙임4·5·6에 모두 자동으로 들어갑니다. (같은 정보가 문서마다 최대 3번 반복돼요)</p>
+
+    <div class="row">
+      <div><label>소속 교육청</label><input id="f_office" placeholder="예: 광주광역시교육청"></div>
+      <div><label>학교급</label>
+        <select id="f_level"><option>초등학교</option><option selected>중학교</option><option>고등학교</option></select>
+      </div>
+    </div>
+    <div class="row">
+      <div><label>소속 학교</label><input id="f_school" placeholder="예: ○○중학교"></div>
+      <div><label>성명</label><input id="f_name" placeholder="예: 김다비"></div>
+    </div>
+    <div class="row">
+      <div><label>연수강사명</label><input id="f_lecturer" placeholder="연수 강사 이름"></div>
+      <div><label>연수 차시</label><input id="f_total" value="6차시" readonly style="background:#f1f3f5"></div>
+    </div>
+
+    <label>대면 연수 일시·장소 <span class="hint">4차시</span></label>
+    <input id="f_face" placeholder="예: 2026년 8월 5일(수) 09:00~13:00(4시간) / ○○중학교 컴퓨터실">
+
+    <label>수업 실천 일시·장소 <span class="hint">2차시 · 보고서 작성 시간 포함</span></label>
+    <input id="f_prac" placeholder="예: 2026년 8월 20일(목) 10:00~12:00(2시간) / ○○중학교 2학년 3반 교실">
+
+    <div class="row">
+      <div><label>수업 실천 대상</label><input id="f_target" placeholder="예: 중학교 2학년 학생"></div>
+      <div><label>대상 인원 수</label><input id="f_count" placeholder="예: 24"></div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="n">2</span> 수업 정보</h2>
+    <p class="desc">붙임5 「수업 개요」에 들어갑니다. 연수 때 만든 <b>코스웨어 내용을 그대로</b> 가져오시면 됩니다.</p>
+
+    <div class="row">
+      <div><label>교과명</label><input id="f_subject" placeholder="예: 과학"></div>
+      <div><label>학년</label><input id="f_grade" placeholder="예: 2학년"></div>
+    </div>
+    <div class="row">
+      <div><label>단원명</label><input id="f_unit" placeholder="예: 식물과 에너지"></div>
+      <div><label>주제</label><input id="f_topic" placeholder="예: 광합성과 AI의 눈"></div>
+    </div>
+
+    <label>내 코스웨어 주소(URL)</label>
+    <input id="f_url" placeholder="https://...vercel.app">
+
+    <div class="tip">
+      💡 아래 <b>수업목표 3분할</b>은 코스웨어의 「오늘 배우는 것」 3칸을 <b>그대로 복사</b>하면 됩니다.
+    </div>
+
+    <label>수업목표 ① 교과</label>
+    <textarea id="f_goal1" rows="2" placeholder="이 수업으로 알게 되는 교과 지식·개념"></textarea>
+    <label>수업목표 ② 인공지능</label>
+    <textarea id="f_goal2" rows="2" placeholder="AI에 대해 알게 되는 것 (AI가 할 수 있는 것 / 한계)"></textarea>
+    <label>수업목표 ③ 교과 + AI 융합</label>
+    <textarea id="f_goal3" rows="2" placeholder="둘을 합쳐 얻는 역량·관점"></textarea>
+
+    <label>기획 의도 키워드 <span class="hint">문장 말고 키워드로. 예: 학생 흥미 낮음, 개념 추상적, 직접 확인 필요</span></label>
+    <input id="f_intent" placeholder="쉼표로 구분해서 3~5개">
+  </section>
+
+  <section>
+    <h2><span class="n">3</span> 수업 실천 결과</h2>
+    <p class="desc">수업이 끝난 뒤 붙임6에 들어갈 내용입니다. 키워드만 적으면 문장이 만들어집니다.</p>
+
+    <label>학생 응답에서 눈에 띈 것 <span class="hint">구글시트 응답을 보고</span></label>
+    <textarea id="f_resp" rows="2" placeholder="예: Q3 AI 한계 질문에 다양한 답, 예상보다 깊은 사고"></textarea>
+
+    <label>만족스러운 점 키워드</label>
+    <input id="f_good" placeholder="예: 참여도 높음, 응답 자동 수집 편리, 평소 조용한 학생도 제출">
+
+    <label>보완할 점 키워드</label>
+    <input id="f_bad" placeholder="예: 접속 시간 지연, 질문 수 과다, 태블릿 일부 오류">
+
+    <label>기타 의견 키워드 <span class="hint">비워도 됩니다</span></label>
+    <input id="f_etc" placeholder="예: 다음엔 모둠 활동으로 확장">
+  </section>
+
+  <section>
+    <h2><span class="n">4</span> 결과 — 복사해서 양식에 붙여넣기</h2>
+    <p class="desc">아래 <b>복사</b> 버튼을 누르고 한글 양식의 해당 칸에 붙여넣으세요.</p>
+
+    <div class="btnbar">
+      <button class="btn" onclick="genAll()">📝 문장 만들기 / 새로고침</button>
+      <button class="btn ghost" onclick="window.print()">🖨️ 인쇄·PDF</button>
+    </div>
+
+    <div class="outhead"><h3>붙임4 · 연수생 제출용 보고서</h3><button class="btn sm ghost" onclick="cp('o4')">복사</button></div>
+    <pre class="out" id="o4">아직 만들어지지 않았습니다. 위 「문장 만들기」를 누르세요.</pre>
+
+    <div class="outhead"><h3>붙임5 · 수업지도안 (수업 개요 + 목표 + 도구)</h3><button class="btn sm ghost" onclick="cp('o5a')">복사</button></div>
+    <pre class="out" id="o5a">—</pre>
+
+    <div class="outhead"><h3>붙임5 · 차시별 교수·학습 활동 (도입/전개/정리/평가)</h3><button class="btn sm ghost" onclick="cp('o5b')">복사</button></div>
+    <pre class="out" id="o5b">—</pre>
+
+    <div class="outhead"><h3>붙임6 · 수업 실천 보고서</h3><button class="btn sm ghost" onclick="cp('o6')">복사</button></div>
+    <pre class="out" id="o6">—</pre>
+  </section>
+
+  <section>
+    <h2><span class="n">5</span> AI로 문장 다듬기 <span class="hint">선택</span></h2>
+    <p class="desc">위 초안이 딱딱하게 느껴지면, 아래 프롬프트를 복사해 ChatGPT·Claude에 붙여넣으세요. <b>내 키워드가 이미 들어 있습니다.</b></p>
+    <div class="outhead"><h3>AI 프롬프트</h3><button class="btn sm ghost" onclick="cp('oai')">복사</button></div>
+    <pre class="out" id="oai">—</pre>
+    <div class="tip">⚠️ AI에게 <b>날짜·인원수·학교명을 새로 만들지 말라</b>고 이미 지시해 두었습니다. 그래도 받은 문장에 숫자가 바뀌지 않았는지 꼭 확인하세요.</div>
+  </section>
+
+  <section>
+    <h2><span class="n">6</span> 제출 전 최종 점검</h2>
+    <div class="chk">
+      <label><input type="checkbox"> 붙임4·5·6의 <b>날짜와 인원수가 서로 일치</b>하는가 (반려 사유 1순위)</label>
+      <label><input type="checkbox"> 붙임4에 <b>산출물 제출 ∨표시</b> 2개(수업지도안·수업실천보고서) 했는가</label>
+      <label><input type="checkbox"> 붙임4에 <b>제출일·서명(또는 인)</b> 넣었는가</label>
+      <label><input type="checkbox"> 붙임5 <b>수업목표가 교과·인공지능·융합 3분할</b>로 되어 있는가</label>
+      <label><input type="checkbox"> 붙임6 <b>실천 사진 4장</b>을 넣었는가 (교사 2 + 학생 참여 2)</label>
+      <label><input type="checkbox"> 붙임6 <b>학생 의견</b>을 넣었는가 (구글시트 응답 활용)</label>
+      <label><input type="checkbox"> 붙임6 <b>수업 성찰 3항목</b>(만족·보완·기타) 모두 작성했는가</label>
+      <label><input type="checkbox"> <b>강사(마스터교원) 확인 서명</b>란을 남겨 두었는가</label>
+      <label><input type="checkbox"> 붙임4는 <b>1쪽 이내</b>, 붙임6은 <b>2쪽 이내</b>인가</label>
+    </div>
+  </section>
+
+  <footer>
+    AIEDAP 교원연수 · 교육용 앱 만들고 배포 관리하기<br>
+    입력값은 이 브라우저에만 저장되며 외부로 전송되지 않습니다.
+  </footer>
+</div>
+
+<script>
+  var FIELDS = ['f_office','f_level','f_school','f_name','f_lecturer','f_face','f_prac',
+    'f_target','f_count','f_subject','f_grade','f_unit','f_topic','f_url',
+    'f_goal1','f_goal2','f_goal3','f_intent','f_resp','f_good','f_bad','f_etc'];
+  var KEY = 'aiedap_report_v1';
+
+  function v(id){ var e=document.getElementById(id); return e ? (e.value||'').trim() : ''; }
+  function or(s, alt){ return s ? s : alt; }
+
+  // 한글 받침 여부에 따라 조사 선택 (와/과, 은/는, 이/가, 을/를)
+  function hasJong(s){
+    if(!s) return false;
+    var c = s.charCodeAt(s.length-1);
+    if(c < 0xAC00 || c > 0xD7A3) return false;
+    return ((c - 0xAC00) % 28) !== 0;
+  }
+  function J(s, withJong, without){ return s + (hasJong(s) ? withJong : without); }
+
+  function save(){
+    var d={}; FIELDS.forEach(function(f){ d[f]=v(f); });
+    try{ localStorage.setItem(KEY, JSON.stringify(d)); }catch(e){}
+    var t=document.getElementById('savedTag');
+    t.classList.add('on'); clearTimeout(window._st);
+    window._st=setTimeout(function(){ t.classList.remove('on'); },1200);
+  }
+  function load(){
+    try{
+      var d=JSON.parse(localStorage.getItem(KEY)||'{}');
+      FIELDS.forEach(function(f){ if(d[f]!==undefined && document.getElementById(f)) document.getElementById(f).value=d[f]; });
+    }catch(e){}
+  }
+
+  // 키워드(쉼표) → 자연스러운 나열
+  function kw(s){
+    if(!s) return '';
+    return s.split(/[,，]/).map(function(x){return x.trim();}).filter(Boolean).join(', ');
+  }
+  function kwSentence(s, tail){
+    var a = s ? s.split(/[,，]/).map(function(x){return x.trim();}).filter(Boolean) : [];
+    if(!a.length) return '';
+    return a.join(', ') + (tail||'');
+  }
+
+  function genAll(){
+    var name=or(v('f_name'),'○○○'), school=or(v('f_school'),'○○학교'),
+        level=v('f_level'), office=or(v('f_office'),'○○교육청'),
+        face=or(v('f_face'),'2026년 ○월 ○일(○) 00:00~00:00(4시간) / ○○'),
+        prac=or(v('f_prac'),'2026년 ○월 ○일(○) 00:00~00:00(2시간) / ○○'),
+        target=or(v('f_target'),'○학년 학생'), count=or(v('f_count'),'00'),
+        subj=or(v('f_subject'),'○○'), grade=or(v('f_grade'),'○학년'),
+        unit=or(v('f_unit'),'○○○'), topic=or(v('f_topic'),'○○○'),
+        url=or(v('f_url'),'(배포한 코스웨어 주소)'),
+        g1=or(v('f_goal1'),'(교과 목표)'), g2=or(v('f_goal2'),'(인공지능 목표)'), g3=or(v('f_goal3'),'(융합 목표)');
+
+    // 붙임4
+    document.getElementById('o4').textContent =
+      '소속 교육청: '+office+'\n'+
+      '학교급: '+level+'\n'+
+      '소속 학교: '+school+'\n'+
+      '성명: '+name+'\n'+
+      '연수 차시: 6차시\n'+
+      '연수강사명: '+or(v('f_lecturer'),'○○○')+'\n'+
+      '대면 연수 일시(4차시): '+face+'\n'+
+      '수업 실천 일시(2차시): '+prac+'\n'+
+      '수업 실천 대상: '+target+'\n'+
+      '대상 인원 수: '+count+'명\n'+
+      '산출물 제출: 수업지도안 [∨]   수업실천보고서 [∨]\n'+
+      '제출자 소속: '+school+'   성명: '+name+' (서명 또는 인)';
+
+    // 붙임5 - 개요
+    var intent = kw(v('f_intent'));
+    var intentSent = intent
+      ? '본 수업은 '+intent+' 상황에서 출발하였다. 이를 해결하기 위해 교사가 직접 제작한 웹 코스웨어를 활용하여 '+topic+' 개념을 학생이 스스로 확인하고, 생성형 AI의 가능성과 한계를 함께 다루도록 설계하였다. 학생의 응답은 온라인으로 자동 수집되어 즉시 피드백과 평가에 활용된다.'
+      : '(기획 의도 키워드를 입력하면 문장이 만들어집니다)';
+
+    document.getElementById('o5a').textContent =
+      '[수업 개요]\n'+
+      '교과명: '+subj+'\n'+
+      '단원명: '+unit+'\n'+
+      '학교급: '+level+'    학년: '+grade+'\n'+
+      '주제: '+topic+'\n\n'+
+      'AI융합수업 기획 의도:\n'+intentSent+'\n\n'+
+      '[수업 목표]\n'+
+      '· 교과: '+g1+'\n'+
+      '· 인공지능: '+g2+'\n'+
+      '· 교과+인공지능 융합: '+g3+'\n\n'+
+      '[수업 활용 AI·디지털 도구]\n'+
+      '1) 교사 제작 웹 코스웨어 — '+topic+' 학습 자료와 정리 질문을 담은 웹페이지. 주소: '+url+'\n'+
+      '2) NotebookLM — 교과서·수업자료를 학습시켜 학생 수준의 핵심 개념 요약을 생성(교사 준비 단계)\n'+
+      '3) 생성형 AI(ChatGPT/Claude 등) — 코스웨어 콘텐츠 및 정리 질문 초안 작성(교사 준비 단계)\n'+
+      '4) Google 스프레드시트 — 학생 응답 자동 수집 및 실시간 확인, 평가 자료로 활용\n\n'+
+      '[지도상의 유의점]\n'+
+      '· 접속 초기 지연을 고려해 수업 시작 전 코스웨어 주소를 미리 안내하고 QR 또는 단축주소를 준비한다.\n'+
+      '· 학생이 정답 맞히기에 집중하지 않도록, 정리 질문은 생각을 쓰는 문항임을 사전에 안내한다.\n'+
+      '· AI의 답변을 그대로 믿지 않고 근거를 확인하도록 지도한다.\n'+
+      '· 개인정보 보호를 위해 학번·이름 외의 정보는 입력하지 않도록 안내한다.\n\n'+
+      '[준비물]\n'+
+      '학생 기기(노트북 또는 태블릿), 인터넷 환경, 코스웨어 주소(QR), 교사용 PC 및 화면 제시 장치';
+
+    // 붙임5 - 차시별
+    document.getElementById('o5b').textContent =
+      '전체 차시: 1차시    본 차시: 1차시\n\n'+
+      '[도입] (7분)\n'+
+      '· 동기유발 1: 교사가 '+J(topic,'과','와')+' 관련된 실제 사례(사진·영상)를 제시하고 "이것을 AI가 판단할 수 있을까?"를 발문한다.\n'+
+      '· 동기유발 2: 학생들이 자유롭게 예상하고 이유를 말한다.\n'+
+      '· 학습목표 제시: 교사가 제작한 코스웨어에 접속하여 「오늘 배우는 것」 3가지(교과/인공지능/융합)를 함께 읽는다.\n'+
+      '  (도구·자료: 코스웨어 주소 '+url+' / 유의점: 접속 확인)\n\n'+
+      '[전개] (28분)\n'+
+      '· 활동 1: 코스웨어의 학습 내용을 읽으며 '+topic+'의 핵심 개념을 파악한다. 교사는 핵심 부분을 발문으로 확인한다. (13분)\n'+
+      '· 활동 2: AI를 활용해 같은 주제를 확인해 보고, AI의 답이 맞는지 교과 지식을 근거로 검증한다. AI가 잘하는 것과 틀릴 수 있는 것을 찾아본다. (15분)\n'+
+      '  (도구·자료: 코스웨어, 생성형 AI / 유의점: AI 답변의 근거 확인, 무비판적 수용 경계)\n\n'+
+      '[정리] (10분)\n'+
+      '· 과제 제시: 코스웨어 하단의 정리 질문 Q1~Q4에 답하고 제출한다. 응답은 교사 스프레드시트로 자동 수집된다.\n'+
+      '· 차시 예고: 수집된 응답 중 인상적인 답변을 다음 차시에 함께 살펴볼 것을 예고한다.\n'+
+      '  (도구·자료: 코스웨어 제출 폼, Google 스프레드시트 / 유의점: 제출 완료 화면 확인)\n\n'+
+      '[평가 도구 및 기준]\n'+
+      '· 평가 도구: 코스웨어 정리 질문(Q1~Q4) 응답, 자동 수집된 스프레드시트 자료\n'+
+      '· 평가 기준\n'+
+      '  - 교과: '+g1+' — 관련 개념을 자기 말로 설명할 수 있는가\n'+
+      '  - 인공지능: '+g2+' — AI의 가능성과 한계를 사례로 들어 말할 수 있는가\n'+
+      '  - 융합: '+g3+' — 교과 지식을 근거로 AI의 답을 검증할 수 있는가';
+
+    // 붙임6
+    var good=kwSentence(v('f_good')), bad=kwSentence(v('f_bad')), etc=kwSentence(v('f_etc')), resp=v('f_resp');
+    document.getElementById('o6').textContent =
+      '[실천 내용]\n'+
+      '· 대면 연수에서 제작한 웹 코스웨어를 '+target+' '+count+'명을 대상으로 '+subj+' 「'+unit+'」 단원의 '+topic+' 수업에 적용하였다.\n'+
+      '· AI·디지털 활용 도구 소개 및 실습: 학생들이 코스웨어 주소('+url+')에 접속하여 학습 내용을 읽고 활동을 수행하였다.\n'+
+      '· AI·디지털 활용·융합 수업 사례: 학생들이 생성형 AI의 답변을 교과 지식으로 검증하는 활동을 통해 AI의 가능성과 한계를 직접 확인하였다.\n'+
+      '· 학생 응답 자동 수집: 코스웨어 하단의 정리 질문에 학생들이 답을 제출하였고, 응답은 Google 스프레드시트로 실시간 수집되어 즉시 확인·피드백에 활용하였다.\n'+
+      '  (첨부 자료: 코스웨어 화면 캡처, 학생 응답 스프레드시트 캡처)\n\n'+
+      '[수강자(학생) 의견사항]\n'+
+      (resp ? '· 수집된 학생 응답을 살펴본 결과 '+resp+' 등의 특징이 나타났다.\n' : '· (학생 응답에서 눈에 띈 점을 입력하면 문장이 만들어집니다)\n')+
+      '· 학생들은 웹으로 학습하고 바로 답을 제출하는 방식에 흥미를 보였으며, 자신의 생각을 글로 정리하는 과정에서 개념을 다시 확인할 수 있었다는 반응을 보였다.\n'+
+      '· AI가 항상 옳은 것은 아니라는 점을 활동을 통해 알게 되었다는 의견이 있었다.\n\n'+
+      '[담당 교사 수업 성찰]\n'+
+      '1) 만족스러운 점\n'+
+      (good ? '· '+good+' 등의 성과가 있었다.\n' : '· (만족스러운 점 키워드를 입력하세요)\n')+
+      '· 교사가 직접 제작한 자료를 활용함으로써 학급 실정에 맞게 내용을 조정할 수 있었고, 학생 응답이 자동으로 모여 평가와 피드백에 드는 시간을 크게 줄일 수 있었다.\n\n'+
+      '2) 보완할 점\n'+
+      (bad ? '· '+bad+' 등의 어려움이 있었다.\n' : '· (보완할 점 키워드를 입력하세요)\n')+
+      '· 다음 실천에서는 접속 및 기기 점검을 수업 전에 완료하고, 질문 수와 활동 시간을 학생 수준에 맞게 조정할 계획이다.\n\n'+
+      '3) 기타\n'+
+      (etc ? '· '+etc+'\n' : '· 제작한 코스웨어를 다른 단원으로 확장하고, 동료 교사와 공유하여 활용 범위를 넓히고자 한다.\n');
+
+    // AI 프롬프트
+    document.getElementById('oai').textContent =
+      '당신은 교원연수 산출물 작성을 돕는 조력자입니다. 아래 정보를 바탕으로 공식 보고서에 어울리는 문어체 문장으로 다듬어 주세요.\n\n'+
+      '[반드시 지킬 것]\n'+
+      '1. 날짜, 인원수, 학교명, 성명, 주소(URL)는 아래 값을 그대로 쓰고 절대 새로 만들거나 바꾸지 마세요.\n'+
+      '2. 없는 사실을 지어내지 마세요. 제가 준 키워드 범위 안에서만 쓰세요.\n'+
+      '3. 과장하지 말고 담백한 공문서 문체("~하였다", "~로 나타났다")로 써 주세요.\n'+
+      '4. 각 항목은 3~5문장 이내로 간결하게 써 주세요.\n\n'+
+      '[고정 정보]\n'+
+      '- 학교/교사: '+school+' / '+name+'\n'+
+      '- 수업: '+subj+' '+grade+' 「'+unit+'」 - '+topic+'\n'+
+      '- 대상: '+target+' '+count+'명\n'+
+      '- 수업 실천 일시: '+prac+'\n'+
+      '- 활용 도구: 교사 제작 웹 코스웨어('+url+'), NotebookLM, 생성형 AI, Google 스프레드시트\n\n'+
+      '[수업목표 3분할]\n- 교과: '+g1+'\n- 인공지능: '+g2+'\n- 융합: '+g3+'\n\n'+
+      '[키워드]\n'+
+      '- 기획 의도: '+or(kw(v('f_intent')),'(없음)')+'\n'+
+      '- 학생 응답 특징: '+or(v('f_resp'),'(없음)')+'\n'+
+      '- 만족스러운 점: '+or(kw(v('f_good')),'(없음)')+'\n'+
+      '- 보완할 점: '+or(kw(v('f_bad')),'(없음)')+'\n'+
+      '- 기타: '+or(kw(v('f_etc')),'(없음)')+'\n\n'+
+      '[써 주세요]\n'+
+      '① AI융합수업 기획 의도 (붙임5)\n'+
+      '② 실천 내용 (붙임6)\n'+
+      '③ 수강자(학생) 의견사항 (붙임6)\n'+
+      '④ 수업 성찰 - 만족스러운 점 / 보완할 점 / 기타 (붙임6)';
+
+    save();
+  }
+
+  function cp(id){
+    var t=document.getElementById(id).textContent;
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(t).then(function(){ alert('복사했습니다. 한글 양식에 붙여넣으세요.'); },
+        function(){ fallback(t); });
+    } else { fallback(t); }
+  }
+  function fallback(t){
+    var ta=document.createElement('textarea'); ta.value=t; document.body.appendChild(ta);
+    ta.select(); try{ document.execCommand('copy'); alert('복사했습니다.'); }catch(e){ alert('복사에 실패했습니다. 직접 선택해서 복사해 주세요.'); }
+    document.body.removeChild(ta);
+  }
+
+  load();
+  FIELDS.forEach(function(f){
+    var e=document.getElementById(f);
+    if(e){ e.addEventListener('input', save); e.addEventListener('change', save); }
+  });
+  genAll();
+</script>
+
+</body>
+</html>

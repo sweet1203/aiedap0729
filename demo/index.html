@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- [완성 예시] 템플릿의 ✏️ 자리를 실제 교과(중2 과학 광합성)로 채운 견본입니다. -->
+<title>🌱 광합성 탐구 — 우리 반 과학 코스웨어</title>
+<style>
+  :root{
+    --accent:#2f9e44;      /* 식물 주제 → 초록으로 변경 (index/수업 페이지 동일 색) */
+    --accent-2:#69db7c;
+    --ink:#212529; --muted:#868e96; --line:#e9ecef; --bg:#f8f9fa; --card:#fff;
+    --shadow:0 3px 14px rgba(0,0,0,.07); --shadow-h:0 12px 30px rgba(0,0,0,.14); --radius:18px;
+  }
+  *{box-sizing:border-box} html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);line-height:1.65;font-size:16px;
+    font-family:"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+  .wrap{max-width:960px;margin:0 auto;padding:0 18px 80px}
+  .hero{background:linear-gradient(135deg,var(--accent-2),var(--accent));color:#fff;padding:46px 28px 40px;
+    border-radius:0 0 30px 30px;box-shadow:0 8px 24px rgba(47,158,68,.28);text-align:center}
+  .hero h1{margin:0 0 10px;font-size:30px;letter-spacing:-.5px}
+  .hero p{margin:0;opacity:.96;font-size:16px}
+  .hero .sub{margin-top:12px;font-size:14px;opacity:.9}
+  .lead{margin:28px 0 8px;color:var(--muted);font-size:15px;text-align:center}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px;margin-top:22px}
+  @media(max-width:560px){.grid{grid-template-columns:1fr}}
+  .card{position:relative;display:flex;flex-direction:column;text-decoration:none;color:inherit;
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;
+    box-shadow:var(--shadow);transition:transform .16s,box-shadow .16s}
+  .card:hover{transform:translateY(-4px);box-shadow:var(--shadow-h)}
+  .card .top{background:linear-gradient(135deg,var(--accent-2),var(--accent));color:#fff;padding:20px 18px 16px;position:relative}
+  .card .top .num{font-size:13px;font-weight:800;opacity:.9}
+  .card .top h3{margin:6px 0 0;font-size:19px}
+  .card .body{padding:14px 18px 18px}
+  .card .body p{margin:0;color:var(--muted);font-size:14px}
+  .card .go{margin-top:14px;font-weight:800;color:var(--accent);font-size:14px}
+
+  footer{margin-top:44px;color:var(--muted);font-size:13px;text-align:center;line-height:1.8}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <h1>🌱 광합성 탐구</h1>
+  <p>식물은 어떻게 스스로 양분을 만들까? — AI의 눈으로 잎을 다시 보기</p>
+  <div class="sub">과학 · 중학교 2학년 · 김다비 선생님</div>
+</header>
+
+<div class="wrap">
+  <p class="lead">아래 카드를 눌러 수업을 시작하세요.</p>
+
+  <div class="grid">
+    <a class="card" href="lesson1.html">
+      <div class="top"><span class="num">1차시</span><h3>광합성과 AI의 눈</h3></div>
+      <div class="body">
+        <p>광합성의 재료와 산물을 정리하고, AI가 잎 사진을 어떻게 판단하는지 따져봅니다.</p>
+        <div class="go">시작하기 →</div>
+      </div>
+    </a>
+  </div>
+
+  <footer>
+    과학 「식물과 에너지」 · 우리 반 광합성 코스웨어<br>
+    AIEDAP 교원연수 · 바이브코딩으로 만든 수업 코스웨어 (완성 예시)
+  </footer>
+</div>
+
+</body>
+</html>

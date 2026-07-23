@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>교육용 앱 만들고 배포 관리하기 — 연수 매뉴얼</title>
+<style>
+  :root{
+    --accent:#0c8599; --accent-2:#22b8cf; --soft:#e3fafc;
+    --ink:#212529; --muted:#868e96; --line:#e9ecef; --bg:#f8f9fa; --card:#fff;
+    --ok:#2b8a3e; --okbg:#ebfbee; --warn:#e8590c; --warnbg:#fff4e6; --danger:#c92a2a; --dangerbg:#fff5f5;
+    --shadow:0 3px 14px rgba(0,0,0,.07); --radius:14px;
+  }
+  *{box-sizing:border-box} html{scroll-behavior:smooth; scroll-padding-top:64px}
+  body{margin:0;background:var(--bg);color:var(--ink);line-height:1.75;font-size:15.5px;
+    font-family:"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,-apple-system,sans-serif}
+  .wrap{max-width:900px;margin:0 auto;padding:0 16px 90px}
+
+  /* 상단 고정 네비 */
+  nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.95);backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);padding:8px 0}
+  nav .inner{max-width:900px;margin:0 auto;padding:0 16px;display:flex;gap:6px;overflow-x:auto}
+  nav a{flex:none;text-decoration:none;color:var(--muted);font-weight:700;font-size:13px;
+    padding:6px 11px;border-radius:999px;white-space:nowrap}
+  nav a:hover{background:var(--soft);color:var(--accent)}
+
+  .hero{background:linear-gradient(135deg,var(--accent-2),var(--accent));color:#fff;
+    padding:40px 26px 34px;border-radius:0 0 26px 26px;box-shadow:0 8px 24px rgba(12,133,153,.28)}
+  .hero h1{margin:0 0 8px;font-size:27px;letter-spacing:-.6px}
+  .hero p{margin:0;opacity:.96;font-size:15px}
+  .hero .sub{margin-top:14px;font-size:13.5px;opacity:.9}
+
+  section{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:22px;margin-top:20px;box-shadow:var(--shadow)}
+  h2{display:flex;align-items:center;gap:10px;font-size:20px;margin:0 0 6px;letter-spacing:-.3px}
+  h2 .n{display:inline-flex;width:30px;height:30px;align-items:center;justify-content:center;
+    background:var(--accent);color:#fff;border-radius:9px;font-size:14px;font-weight:800;flex:none}
+  h3{font-size:16px;margin:20px 0 8px}
+  .lead{color:var(--muted);font-size:14px;margin:0 0 14px}
+
+  /* 다운로드 카드 */
+  .dl{background:linear-gradient(135deg,#e3fafc,#c5f6fa);border:2px solid var(--accent-2);
+    border-radius:var(--radius);padding:22px;margin-top:20px;text-align:center}
+  .dl h2{justify-content:center;margin-bottom:6px}
+  .dlbtn{display:inline-block;margin-top:12px;background:var(--accent);color:#fff;text-decoration:none;
+    font-weight:800;font-size:16px;padding:14px 28px;border-radius:12px;box-shadow:0 4px 14px rgba(12,133,153,.3)}
+  .dlbtn:hover{filter:brightness(1.08)}
+  .dllist{text-align:left;max-width:560px;margin:16px auto 0;font-size:14px}
+  .dllist div{padding:5px 0;border-bottom:1px dashed #b8e6ed}
+  .dllist div:last-child{border:none}
+  .dllist b{color:var(--accent)}
+
+  /* 타임라인 */
+  .tl{margin-top:8px}
+  .tl-item{display:flex;gap:14px;padding:10px 0;border-bottom:1px solid var(--line)}
+  .tl-item:last-child{border:none}
+  .tl-time{flex:none;width:96px;font-weight:800;color:var(--accent);font-size:13.5px}
+  .tl-body{flex:1;font-size:14.5px}
+  .tl-body b{display:block}
+
+  /* 단계 박스 */
+  .step{border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:10px;
+    padding:14px 16px;margin-top:12px;background:#fcfeff}
+  ol.click{margin:8px 0 0;padding-left:22px}
+  ol.click li{margin:7px 0}
+  .kbd{display:inline-block;background:#f1f3f5;border:1px solid #dee2e6;border-bottom-width:2px;
+    border-radius:5px;padding:1px 7px;font-size:13px;font-weight:700}
+  .path{background:#f1f3f5;border-radius:6px;padding:2px 8px;font-weight:700;font-size:14px}
+
+  /* 프롬프트 */
+  .pbox{margin-top:14px}
+  .phead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+  .phead h4{margin:0;font-size:14.5px}
+  pre.p{background:#f8f9fb;border:1px solid var(--line);border-left:4px solid var(--accent-2);
+    border-radius:10px;padding:14px;white-space:pre-wrap;word-break:break-word;
+    font-family:inherit;font-size:13.5px;margin:8px 0 0;line-height:1.7}
+  .btn{background:var(--accent);color:#fff;border:none;font-weight:800;font-size:13px;
+    padding:7px 14px;border-radius:8px;cursor:pointer}
+  .btn:hover{filter:brightness(1.1)}
+  .btn.ghost{background:#fff;color:var(--accent);border:1.5px solid var(--accent)}
+
+  /* 알림 박스 */
+  .note{border-radius:10px;padding:12px 15px;margin-top:12px;font-size:14px}
+  .note.warn{background:var(--warnbg);border:1px solid #ffc078}
+  .note.danger{background:var(--dangerbg);border:1px solid #ffa8a8}
+  .note.ok{background:var(--okbg);border:1px solid #8ce99a}
+  .note.info{background:var(--soft);border:1px solid #99e9f2}
+  .note b{display:inline}
+
+  /* 체크박스 진행 */
+  .chk label{display:flex;gap:10px;align-items:flex-start;font-size:14px;margin:8px 0;cursor:pointer}
+  .chk input{width:auto;flex:none;margin-top:5px;transform:scale(1.2)}
+  .chk input:checked + span{color:var(--muted);text-decoration:line-through}
+
+  table{width:100%;border-collapse:collapse;margin-top:12px;font-size:14px}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  th{background:#f1f3f5;font-weight:800}
+
+  details{border:1px solid var(--line);border-radius:10px;padding:12px 15px;margin-top:10px;background:#fff}
+  details summary{cursor:pointer;font-weight:800;font-size:14.5px}
+  details[open] summary{margin-bottom:8px;color:var(--accent)}
+  details p,details ul{font-size:14px;margin:6px 0}
+
+  footer{text-align:center;color:var(--muted);font-size:13px;margin-top:36px;line-height:1.9}
+  .toplink{position:fixed;right:16px;bottom:16px;background:var(--accent);color:#fff;text-decoration:none;
+    width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-size:20px;box-shadow:0 4px 14px rgba(0,0,0,.2);z-index:60}
+  @media print{ nav,.toplink,.btn,.dlbtn{display:none} section{break-inside:avoid;box-shadow:none} }
+</style>
+</head>
+<body>
+
+<header class="hero" id="top">
+  <h1>🚀 교육용 앱 만들고 배포 관리하기</h1>
+  <p>내 교과 수업 코스웨어를 만들어 인터넷에 배포하고, 학생 응답을 자동으로 받습니다</p>
+  <div class="sub">AIEDAP 호남권역 일반교원 AI디지털 융합수업 역량강화 연수 · 대면 4차시</div>
+</header>
+
+<nav>
+  <div class="inner">
+    <a href="#down">📥 자료받기</a>
+    <a href="#flow">오늘의 흐름</a>
+    <a href="#s1">1 교과뽑기</a>
+    <a href="#s2">2 코스웨어</a>
+    <a href="#s3">3 시트연결</a>
+    <a href="#s4">4 배포</a>
+    <a href="#s5">5 확인</a>
+    <a href="#s6">6 산출물</a>
+    <a href="#prompts">💬 프롬프트</a>
+    <a href="#faq">🆘 막힐 때</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <div class="note info" style="margin-top:20px">
+    <b>오늘 만들 것을 먼저 보세요 →</b> <a href="demo/" id="demoLink" target="_blank" rel="noopener" style="color:var(--accent);font-weight:800">완성 예시 열어보기 (광합성) →</a><br>
+    폰으로도 열어보세요. 아래로 내려가면 <b>정리 질문</b>이 있고, 답을 제출하면 <b>선생님 구글시트에 자동으로 쌓입니다.</b>
+  </div>
+
+  <div class="note ok">
+    ✅ <b>오늘은 아무것도 설치하지 않습니다.</b> Node·npm·프로그램 설치 전혀 없습니다. <b>브라우저만</b> 있으면 됩니다.
+  </div>
+
+  <!-- 다운로드 -->
+  <div class="dl" id="down">
+    <h2>📥 연수 자료 받기</h2>
+    <p style="margin:0;font-size:14px;color:#0b7285">아래 버튼을 눌러 구글 드라이브에서 파일을 받으세요.</p>
+    <a class="dlbtn" href="https://drive.google.com/drive/folders/15x6wC0PKQ6B7ZtqDEJqRvMQ2Yxthvem7?usp=sharing" target="_blank" rel="noopener">
+      구글 드라이브 열기 →
+    </a>
+    <div class="dllist">
+      <div><b>00</b> 먼저 읽으세요 — 전체 안내</div>
+      <div><b>01</b> 코스웨어 템플릿 (ZIP) — <b>다운로드해서</b> 씁니다</div>
+      <div><b>02</b> Code_복사용.txt — 화면에서 <b>복사만</b> 하세요</div>
+      <div><b>03</b> 완성 예시 (광합성)</div>
+      <div><b>04</b> 교사용 배포 체크리스트</div>
+      <div><b>05</b> 막힘 대응표</div>
+      <div><b>06</b> 산출물 도우미 — 연수 후 보고서 작성용 ⭐</div>
+      <div><b>07</b> 수업지도안 양식 · <b>08</b> 전원 URL 공유 시트</div>
+    </div>
+    <div class="note warn" style="text-align:left;max-width:560px;margin:16px auto 0">
+      ⚠️ <b>HTML 파일은 "클릭해서 보는" 파일이 아닙니다.</b> 드라이브에서 클릭하면 <i>"미리보기를 사용할 수 없습니다"</i>가 뜨거나 코드가 그대로 보입니다. <b>고장이 아닙니다.</b> ⬇️ 다운로드한 뒤 <b>더블클릭</b>하면 정상적으로 열립니다.
+    </div>
+  </div>
+
+  <!-- 흐름 -->
+  <section id="flow">
+    <h2><span class="n">📍</span> 오늘의 흐름</h2>
+    <p class="lead">4시간 동안 이 순서로 진행합니다. 지금 어디쯤인지 확인하세요.</p>
+    <div class="tl">
+      <div class="tl-item" style="opacity:.75"><div class="tl-time">08:50</div><div class="tl-body"><b>도착 · 계정 점검</b>GitHub·Vercel 로그인이 되는지만 미리 확인합니다. (일찍 오시면 편합니다)</div></div>
+      <div class="tl-item"><div class="tl-time">09:00–09:20</div><div class="tl-body"><b>시작 · 완성 데모</b>오늘 만들 것을 먼저 봅니다. 개념 3가지(웹앱·배포·수집)를 짧게.</div></div>
+      <div class="tl-item"><div class="tl-time">09:20–09:50</div><div class="tl-body"><b>1단계 · NotebookLM으로 내 교과 뽑기</b>내 교과서·자료에서 핵심 개념 요약을 만듭니다.</div></div>
+      <div class="tl-item"><div class="tl-time">09:50–10:35</div><div class="tl-body"><b>2단계 · AI로 코스웨어 만들기</b>템플릿의 ✏️ 자리를 내 교과 내용으로 채웁니다.</div></div>
+      <div class="tl-item"><div class="tl-time">10:35–10:45</div><div class="tl-body"><b>☕ 휴식 10분</b>다음이 오늘 가장 중요한 구간입니다. 쉬고 오세요.</div></div>
+      <div class="tl-item" style="background:#fff9db;border-radius:8px"><div class="tl-time">10:45–11:35</div><div class="tl-body"><b>3단계 · 구글시트 연결 ⚠️ 오늘의 승부처</b>학생 답이 자동으로 모이도록 연결합니다. 다 같이 천천히 갑니다.</div></div>
+      <div class="tl-item"><div class="tl-time">11:35–12:00</div><div class="tl-body"><b>4단계 · 인터넷에 올리기</b>GitHub에 올리고 Vercel로 배포 → 내 주소(URL)가 생깁니다.</div></div>
+      <div class="tl-item" style="background:#ebfbee;border-radius:8px"><div class="tl-time">12:00–12:15</div><div class="tl-body"><b>5단계 · 연결 확인 🎉 완주 지점</b>폰으로 열어 제출 → 시트에 쌓이는지 확인. <b>여기까지 오면 성공입니다.</b></div></div>
+      <div class="tl-item"><div class="tl-time">12:15–12:40</div><div class="tl-body"><b>6단계 · 수업지도안 초안</b>산출물 도우미로 지도안을 채웁니다. (나머지는 집에서 마무리 가능)</div></div>
+      <div class="tl-item"><div class="tl-time">12:40–13:00</div><div class="tl-body"><b>갤러리 · 실천 약속</b>서로의 코스웨어를 보고, <b>언제 어느 수업에서 쓸지</b> 정합니다.</div></div>
+    </div>
+    <div class="note info">⏰ <b>09:00 시작, 13:00 종료</b>입니다. 중간에 화장실은 자유롭게 다녀오세요. 진도가 밀려도 <b>12:15 완주</b>는 다 같이 맞춥니다.</div>
+
+    <h3>🧠 먼저 알아둘 개념 3가지</h3>
+    <table>
+      <tr><th style="width:100px">웹앱</th><td>내가 만든 파일이 <b>남의 컴퓨터(브라우저)</b>에서 돌아가는 것</td></tr>
+      <tr><th>배포</th><td>내 파일에 <b>주소(URL)를 붙여</b> 누구나 열 수 있게 하는 것</td></tr>
+      <tr><th>수집</th><td>학생이 낸 답이 <b>자동으로 내 구글시트</b>에 모이는 것</td></tr>
+    </table>
+    <div class="note info">지금은 이 정도만 아시면 됩니다. <b>직접 해본 다음에</b> 다시 설명드립니다. 훨씬 잘 이해됩니다.</div>
+  </section>
+
+  <!-- 1단계 -->
+  <section id="s1">
+    <h2><span class="n">1</span> NotebookLM으로 내 교과 뽑기</h2>
+    <p class="lead">09:20–09:50 · 내 교과서·수업자료에서 학생 눈높이 요약을 만듭니다.</p>
+
+    <div class="step">
+      <ol class="click">
+        <li><span class="path">notebooklm.google.com</span> 접속 (구글 계정으로 바로 열립니다)</li>
+        <li><b>새로 만들기</b> → 내 <b>교과서 PDF·수업자료</b>를 업로드</li>
+        <li>업로드가 끝나면 아래 <b>프롬프트를 복사해</b> 채팅창에 붙여넣기</li>
+        <li>나온 답변을 <b>드래그해서 복사</b> (<span class="kbd">Ctrl</span>+<span class="kbd">C</span>) — 2단계에서 씁니다</li>
+      </ol>
+    </div>
+
+    <div class="note warn">
+      ⚠️ <b>내보내기(Export) 버튼을 찾지 마세요.</b> NotebookLM에는 깔끔한 <code>.md 내보내기</code>가 없습니다. <b>채팅 답변을 복사</b>하는 것으로 충분합니다.
+    </div>
+
+    <div class="pbox">
+      <div class="phead"><h4>💬 프롬프트 ① — 교과 내용 요약</h4><button class="btn ghost" onclick="cp('p1')">복사</button></div>
+      <pre class="p" id="p1">이 단원의 핵심 개념을 중학교 2학년 학생이 이해할 수 있는 수준으로 정리해줘.
+
+1) 핵심 개념 5~7문장
+2) 학생이 헷갈리기 쉬운 부분 2가지
+3) 실생활에서 볼 수 있는 예시 2가지
+
+교과서에 있는 내용만 사용하고, 없는 내용은 지어내지 마.</pre>
+      <div class="note info">💡 <b>학년을 본인 학년으로 바꿔서</b> 쓰세요. 초등이면 "초등학교 5학년", 고등이면 "고등학교 1학년".</div>
+    </div>
+  </section>
+
+  <!-- 2단계 -->
+  <section id="s2">
+    <h2><span class="n">2</span> AI로 코스웨어 만들기</h2>
+    <p class="lead">09:50–10:35 · 템플릿의 ✏️ 자리를 내 교과 내용으로 채웁니다.</p>
+
+    <div class="step">
+      <h3 style="margin-top:0">먼저 템플릿을 준비하세요</h3>
+      <ol class="click">
+        <li>드라이브에서 <b>01_코스웨어_템플릿.zip</b> 다운로드</li>
+        <li>다운로드 폴더에서 <b>압축 풀기</b> → <code>index.html</code>, <code>수업_템플릿.html</code> 두 개</li>
+        <li>바탕화면에 <b>내 이름 폴더</b>를 만들어 옮기기 (예: <code>김다비_코스웨어</code>)</li>
+        <li><code>수업_템플릿.html</code>을 <b>메모장</b>이나 <b>텍스트 편집기</b>로 열기<br>
+            <span style="color:var(--muted);font-size:13.5px">윈도우: 파일 우클릭 → 연결 프로그램 → 메모장 / 맥: 우클릭 → 다음으로 열기 → 텍스트 편집기</span></li>
+        <li><span class="kbd">Ctrl</span>+<span class="kbd">A</span> 전체 선택 → <span class="kbd">Ctrl</span>+<span class="kbd">C</span> 복사</li>
+      </ol>
+    </div>
+
+    <div class="pbox">
+      <div class="phead"><h4>💬 프롬프트 ② — 코스웨어 채우기 <b style="color:var(--danger)">★ 가장 중요</b></h4><button class="btn ghost" onclick="cp('p2')">복사</button></div>
+      <pre class="p" id="p2">아래 HTML 템플릿의 ✏️ 표시된 부분을 내 교과 내용으로 채워서 완성된 HTML로 돌려줘.
+
+[반드시 지킬 것]
+1. 구조, CSS, 폼(form), script 부분은 절대 바꾸지 마세요.
+2. ✏️ 표시가 있는 자리의 텍스트만 교체하세요.
+3. 반드시 단일 HTML 파일 하나로만 주세요. (React, 여러 파일, 빌드 설정 금지)
+4. SCRIPT_URL 이 들어간 줄은 그대로 두세요.
+5. 내가 준 학습 내용 안에서만 쓰고, 없는 내용을 지어내지 마세요.
+
+[내 수업 정보]
+- 교과:
+- 학년:
+- 단원명:
+- 주제:
+
+[학습 내용]
+(여기에 1단계에서 복사한 NotebookLM 요약을 붙여넣기)
+
+[템플릿]
+(여기에 수업_템플릿.html 전체를 붙여넣기)</pre>
+    </div>
+
+    <div class="note danger">
+      🚨 <b>"단일 HTML 파일 하나로"를 꼭 넣으세요.</b> 이걸 빼면 AI가 React 프로젝트나 여러 개 파일을 만들어줍니다. 그러면 <b>4단계 배포에서 반드시 실패합니다.</b>
+    </div>
+
+    <div class="pbox">
+      <div class="phead"><h4>💬 프롬프트 ③ — 정리 질문 4개 만들기</h4><button class="btn ghost" onclick="cp('p3')">복사</button></div>
+      <pre class="p" id="p3">위 학습 내용으로 학생 정리 질문 4개를 만들어줘.
+
+- Q1, Q2: 교과 내용을 이해했는지 확인하는 질문
+- Q3: AI에 대해 생각해보는 질문 (AI가 잘하는 것 / 틀릴 수 있는 것)
+- Q4: 오늘 배운 것을 한 문장으로 정리하는 질문
+
+정답을 외워서 쓰는 질문 말고, 자기 생각을 쓰게 하는 질문으로 만들어줘.</pre>
+    </div>
+
+    <div class="pbox">
+      <div class="phead"><h4>💬 프롬프트 ④ — 수업목표 3분할 (산출물에 그대로 씁니다)</h4><button class="btn ghost" onclick="cp('p4')">복사</button></div>
+      <pre class="p" id="p4">이 수업의 목표를 세 가지로 나눠서 각각 한 문장으로 써줘.
+
+① 교과: 이 수업으로 알게 되는 교과 지식·개념
+② 인공지능: AI에 대해 알게 되는 것 (AI가 할 수 있는 것과 한계)
+③ 교과+AI 융합: 둘을 합쳐서 얻는 역량이나 관점
+
+"~할 수 있다" 형태로 써줘.</pre>
+      <div class="note ok">✅ 이 3가지는 <b>수업지도안(붙임5)에 그대로 들어갑니다.</b> 나중에 다시 안 만들어도 됩니다.</div>
+    </div>
+
+    <div class="step">
+      <h3 style="margin-top:0">받은 코드를 저장하고 확인하기</h3>
+      <ol class="click">
+        <li>AI가 준 HTML 코드를 <b>전체 복사</b></li>
+        <li>메모장에 붙여넣고 <b>다른 이름으로 저장</b></li>
+        <li>파일 이름: <code>1차시.html</code> · 파일 형식: <b>모든 파일</b> · 인코딩: <b>UTF-8</b></li>
+        <li>저장한 파일을 <b>더블클릭</b> → 브라우저에서 내 코스웨어가 열립니다 🎉</li>
+      </ol>
+      <div class="note warn">⚠️ 저장할 때 <b>인코딩을 UTF-8</b>로 하지 않으면 한글이 깨집니다.</div>
+      <div class="note info">💡 차시를 여러 개 만들려면 같은 방법으로 <code>2차시.html</code>, <code>3차시.html</code>을 만들고, <code>index.html</code>의 링크를 맞춰주세요.</div>
+    </div>
+  </section>
+
+  <!-- 3단계 -->
+  <section id="s3">
+    <h2><span class="n">3</span> 구글시트 연결하기 ⚠️</h2>
+    <p class="lead">10:45–11:35 · <b>오늘 가장 까다로운 단계입니다.</b> 강사와 함께 천천히 진행합니다.</p>
+
+    <div class="note danger">
+      🚨 이 단계에서 <b>"안전하지 않음" 경고 화면</b>이 나옵니다. <b>정상입니다.</b> 내가 직접 만든 스크립트라서 구글이 습관적으로 띄우는 경고예요. 아래 순서대로 진행하세요.
+    </div>
+
+    <div class="step">
+      <h3 style="margin-top:0">① 구글시트와 스크립트 만들기</h3>
+      <ol class="click">
+        <li><span class="path">drive.google.com</span> → <b>새로 만들기</b> → <b>Google 스프레드시트</b></li>
+        <li>제목을 정하기 (예: <code>과학 수업응답</code>)</li>
+        <li>메뉴 <span class="path">확장 프로그램 → Apps Script</span> 클릭</li>
+        <li>기본으로 있는 코드를 <b>전체 선택</b>(<span class="kbd">Ctrl</span>+<span class="kbd">A</span>) 후 <b>삭제</b></li>
+        <li>드라이브의 <b>02_Code_복사용.txt</b>를 열어 전체 복사 → 여기에 붙여넣기</li>
+        <li><b>저장</b> (💾 아이콘 또는 <span class="kbd">Ctrl</span>+<span class="kbd">S</span>)</li>
+      </ol>
+      <div class="note warn">⚠️ <b>02번 파일을 구글 문서로 열지 마세요.</b> 따옴표가 자동으로 바뀌어 코드가 깨집니다. <b>.txt 화면에서 바로 복사</b>하세요.</div>
+    </div>
+
+    <div class="step">
+      <h3 style="margin-top:0">② 권한 승인 (놀라지 마세요)</h3>
+      <ol class="click">
+        <li>상단 함수 목록에서 <b>setup</b> 선택 → <b>▶ 실행</b></li>
+        <li><b>권한 검토</b> 창 → 내 구글 계정 선택</li>
+        <li>⚠️ <b>"Google에서 확인하지 않은 앱"</b> 경고가 뜹니다 → <b>고급</b> 클릭</li>
+        <li>맨 아래 <b>"(안전하지 않음)으로 이동"</b> 클릭</li>
+        <li><b>허용</b> 클릭</li>
+        <li>시트에 <b>응답</b> 탭이 생기면 성공 ✅</li>
+      </ol>
+    </div>
+
+    <div class="step">
+      <h3 style="margin-top:0">③ 웹 앱으로 배포하고 주소 받기</h3>
+      <ol class="click">
+        <li>오른쪽 위 <b>배포</b> → <b>새 배포</b></li>
+        <li>왼쪽 톱니바퀴 <b>⚙️</b> → <b>웹 앱</b> 선택</li>
+        <li><b>실행 사용자: 나</b></li>
+        <li><b>액세스 권한: 링크가 있는 모든 사용자</b> ← 꼭 이걸로!</li>
+        <li><b>배포</b> 클릭 → 권한 승인</li>
+        <li><b>웹 앱 URL 복사</b> — 주소가 <code>/exec</code>로 끝나는지 확인!</li>
+      </ol>
+      <div class="note ok">✅ 복사한 주소 예시: <code>https://script.google.com/macros/s/AKfy...../exec</code></div>
+      <div class="note danger">🚨 <code>/dev</code>로 끝나면 <b>안 됩니다.</b> 반드시 <code>/exec</code>여야 학생 응답이 들어옵니다.</div>
+    </div>
+
+    <div class="step">
+      <h3 style="margin-top:0">④ 주소를 내 코스웨어에 넣기</h3>
+      <ol class="click">
+        <li><code>1차시.html</code>을 메모장으로 열기</li>
+        <li><span class="kbd">Ctrl</span>+<span class="kbd">F</span>로 <code>PASTE_WEBAPP_URL</code> 찾기</li>
+        <li>그 부분을 <b>복사한 /exec 주소로 교체</b> (따옴표 <code>"</code>는 그대로 두기)</li>
+        <li>저장</li>
+      </ol>
+      <div class="note info">💡 차시 파일이 여러 개면 <b>모두 같은 주소</b>를 넣으면 됩니다. 시트에서 차시별로 탭이 자동으로 나뉩니다.</div>
+    </div>
+
+    <div class="note warn">
+      🆘 <b>여기서 막히면 손드세요.</b> 강사가 미리 만들어 둔 시트를 대신 드립니다. 그 주소를 받아서 <b>④번부터</b> 이어가면 됩니다. <b>아무도 여기서 멈추지 않습니다.</b>
+    </div>
+  </section>
+
+  <!-- 4단계 -->
+  <section id="s4">
+    <h2><span class="n">4</span> 인터넷에 올리기 (배포)</h2>
+    <p class="lead">11:35–12:00 · 내 코스웨어에 주소(URL)를 만들어 줍니다.</p>
+
+    <div class="step">
+      <h3 style="margin-top:0">① GitHub에 파일 올리기</h3>
+      <ol class="click">
+        <li><span class="path">github.com</span> 로그인 → 오른쪽 위 <b>+</b> → <b>New repository</b></li>
+        <li>이름 입력 (예: <code>my-courseware</code>) · <b>Public</b> 선택 · <b>Create repository</b></li>
+        <li><b>uploading an existing file</b> 링크 클릭</li>
+        <li>내 파일들(<code>index.html</code>, <code>1차시.html</code>)을 <b>드래그해서 올리기</b></li>
+        <li>아래 <b>Commit changes</b> 클릭</li>
+      </ol>
+      <div class="note info">💡 <b>commit(커밋)</b>은 "이 상태로 저장해줘"라는 뜻입니다. 나중에 되돌릴 수도 있어요.</div>
+    </div>
+
+    <div class="step">
+      <h3 style="margin-top:0">② Vercel로 배포하기</h3>
+      <ol class="click">
+        <li><span class="path">vercel.com</span> → GitHub 계정으로 로그인</li>
+        <li><b>Add New</b> → <b>Project</b></li>
+        <li>방금 만든 저장소 옆 <b>Import</b> 클릭</li>
+        <li>아무 설정도 건드리지 말고 <b>Deploy</b> 클릭</li>
+        <li>잠시 기다리면 🎉 축하 화면 → <b>주소를 클릭하면 내 코스웨어!</b></li>
+      </ol>
+      <div class="note danger">🚨 설정 화면에서 <b>아무것도 바꾸지 마세요.</b> 그냥 Deploy만 누르면 됩니다.</div>
+    </div>
+  </section>
+
+  <!-- 5단계 -->
+  <section id="s5">
+    <h2><span class="n">5</span> 연결 확인 — 가장 중요한 순간</h2>
+    <p class="lead">12:00–12:15 · 학생처럼 직접 제출해 보고, 시트에 쌓이는지 확인합니다.</p>
+
+    <div class="step">
+      <ol class="click">
+        <li>받은 <b>주소를 내 폰으로</b> 열기 (카톡으로 나에게 보내면 편합니다)</li>
+        <li>아래로 내려가 <b>학번·이름·답</b>을 넣고 <b>제출하기</b></li>
+        <li><b>"✅ 제출 완료!"</b>가 뜨는지 확인</li>
+        <li>내 <b>구글시트</b>를 열어 <b>새 줄이 생겼는지</b> 확인 🎉</li>
+        <li>이 화면(제출 완료 + 시트 응답)을 <b>캡처</b>해 두기</li>
+      </ol>
+      <div class="note ok">✅ 시트에 줄이 생겼다면 <b>모든 연결이 성공한 것입니다.</b> 이제 학생과 수업할 수 있습니다!</div>
+      <div class="note info">📸 4번의 캡처는 나중에 <b>수업실천보고서(붙임6)의 증빙자료</b>로 씁니다. 꼭 저장해 두세요.</div>
+    </div>
+
+    <h3>✅ 여기까지 체크</h3>
+    <div class="chk" id="chk">
+      <label><input type="checkbox" data-k="c1"><span>NotebookLM으로 교과 요약을 뽑았다</span></label>
+      <label><input type="checkbox" data-k="c2"><span>AI로 코스웨어 HTML을 만들어 저장했다</span></label>
+      <label><input type="checkbox" data-k="c3"><span>더블클릭해서 브라우저에 잘 열린다</span></label>
+      <label><input type="checkbox" data-k="c4"><span>구글시트 + Apps Script 배포를 마치고 /exec 주소를 받았다</span></label>
+      <label><input type="checkbox" data-k="c5"><span>주소를 코스웨어에 넣고 저장했다</span></label>
+      <label><input type="checkbox" data-k="c6"><span>GitHub에 올리고 Vercel로 배포해 URL을 받았다</span></label>
+      <label><input type="checkbox" data-k="c7"><span>폰으로 제출했더니 시트에 줄이 생겼다 🎉</span></label>
+      <label><input type="checkbox" data-k="c8"><span>공유 시트에 내 코스웨어 주소를 적었다</span></label>
+    </div>
+  </section>
+
+  <!-- 6단계 -->
+  <section id="s6">
+    <h2><span class="n">6</span> 산출물 작성 (지도안 · 보고서)</h2>
+    <p class="lead">12:15–12:40 · 연수 후 제출할 서류를 미리 시작합니다.</p>
+
+    <div class="note danger">
+      📸 <b>수업 전에 반드시 준비하세요 — 수업이 끝나면 되돌릴 수 없습니다.</b><br>
+      · 교사가 수업하는 사진 <b>2장</b> (동료나 학생에게 부탁)<br>
+      · 학생 참여가 확인되는 사진 <b>2장</b><br>
+      · 학생 응답 <b>구글시트 캡처</b> — 「학생 의견」 증빙으로 그대로 씁니다<br>
+      <b>붙임6은 수업실천 2차시 안에 보고서 작성까지 포함</b>입니다. 수업 직후 바로 쓰세요.
+    </div>
+
+    <div class="step">
+      <h3 style="margin-top:0">산출물 도우미 쓰는 법</h3>
+      <ol class="click">
+        <li><a href="helper.html" target="_blank" rel="noopener" style="color:var(--accent);font-weight:800">여기를 눌러 산출물 도우미 열기 →</a> (다운로드 없이 바로 씁니다)<br><span style="color:var(--muted);font-size:13.5px">집에서 쓰려면 드라이브의 <b>06_산출물_도우미.html</b>을 받아 더블클릭해도 됩니다.</span></li>
+        <li><b>기본 정보</b>(소속·성명·일시·인원)를 한 번만 입력</li>
+        <li><b>수업 정보</b>는 내 코스웨어의 「오늘 배우는 것」 3칸을 그대로 복사</li>
+        <li><b>키워드</b>만 넣고 <b>「문장 만들기」</b> 클릭</li>
+        <li>항목별 <b>복사</b> 버튼 → 한글 양식에 붙여넣기</li>
+      </ol>
+      <div class="note ok">✅ 입력한 내용은 <b>자동 저장</b>됩니다. 창을 닫았다 다시 열어도 남아 있어요.</div>
+    </div>
+
+    <h3>내 코스웨어가 산출물에 그대로 들어갑니다</h3>
+    <table>
+      <tr><th style="width:44%">붙임5 지도안 항목</th><th>어디서 가져오나</th></tr>
+      <tr><td>수업목표 (교과 / 인공지능 / 융합)</td><td>코스웨어 「오늘 배우는 것」 3칸 <b>그대로</b></td></tr>
+      <tr><td>수업 활용 AI·디지털 도구</td><td>내 코스웨어 URL + NotebookLM + 생성형 AI + 구글시트</td></tr>
+      <tr><td>평가 도구 및 기준</td><td>정리 질문 Q1~Q4 + 시트에 모인 학생 응답</td></tr>
+      <tr><td>붙임6 학생 의견</td><td>구글시트 응답 내용</td></tr>
+    </table>
+    <div class="note info">💡 <b>백지에서 시작하지 않습니다.</b> 오늘 만든 것이 그대로 서류가 됩니다.</div>
+  </section>
+
+  <!-- 프롬프트 모음 -->
+  <section id="prompts">
+    <h2><span class="n">💬</span> 프롬프트 모음</h2>
+    <p class="lead">위에서 쓴 프롬프트와, 상황별로 쓸 수 있는 추가 프롬프트입니다.</p>
+
+    <div class="pbox">
+      <div class="phead"><h4>⑤ 코스웨어가 이상하게 나올 때 (복구)</h4><button class="btn ghost" onclick="cp('p5')">복사</button></div>
+      <pre class="p" id="p5">방금 준 HTML이 브라우저에서 제대로 안 나옵니다.
+
+원래 템플릿의 구조·CSS·폼·script를 그대로 유지하면서 다시 만들어주세요.
+내용 텍스트는 유지하고, 반드시 단일 HTML 파일 하나로만 주세요.
+설명 없이 코드만 주세요.</pre>
+    </div>
+
+    <div class="pbox">
+      <div class="phead"><h4>⑥ 내용을 더 쉽게 바꾸고 싶을 때</h4><button class="btn ghost" onclick="cp('p6')">복사</button></div>
+      <pre class="p" id="p6">이 코스웨어의 설명 부분이 학생에게 조금 어려운 것 같습니다.
+
+- 문장을 더 짧게
+- 어려운 용어에는 괄호로 쉬운 설명 추가
+- 실생활 예시 1개 추가
+
+구조·CSS·폼·script는 그대로 두고, 설명 텍스트만 바꿔서 단일 HTML로 다시 주세요.</pre>
+    </div>
+
+    <div class="pbox">
+      <div class="phead"><h4>⑦ 활동을 하나 더 넣고 싶을 때</h4><button class="btn ghost" onclick="cp('p7')">복사</button></div>
+      <pre class="p" id="p7">「이렇게 해봅시다」 부분에 활동을 하나 더 추가해주세요.
+
+추가할 활동: (여기에 원하는 활동을 적으세요)
+
+기존 활동 카드와 같은 형식(div class="step")으로 만들고,
+구조·CSS·폼·script는 그대로 두세요. 단일 HTML 파일로 주세요.</pre>
+    </div>
+
+    <div class="pbox">
+      <div class="phead"><h4>⑧ 수업지도안 문장 다듬기 (연수 후)</h4><button class="btn ghost" onclick="cp('p8')">복사</button></div>
+      <pre class="p" id="p8">교원연수 산출물에 넣을 문장을 공문서 문체로 다듬어주세요.
+
+[반드시 지킬 것]
+- 날짜, 인원수, 학교명, 성명은 제가 준 값을 그대로 쓰고 절대 바꾸지 마세요.
+- 없는 사실을 지어내지 마세요.
+- "~하였다", "~로 나타났다" 형태의 담백한 문체로 써주세요.
+- 각 항목 3~5문장 이내로 간결하게.
+
+[내 정보]
+(여기에 정보와 키워드를 붙여넣으세요)</pre>
+      <div class="note info">💡 <b>06_산출물_도우미</b>를 쓰면 이 프롬프트가 <b>내 정보가 채워진 상태로</b> 자동 생성됩니다.</div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq">
+    <h2><span class="n">🆘</span> 막힐 때 — 자주 있는 문제</h2>
+    <p class="lead">아래에서 내 상황을 찾아보세요. 그래도 안 되면 손드세요.</p>
+
+    <details>
+      <summary>드라이브에서 HTML 파일이 안 열려요 / 코드만 보여요</summary>
+      <p><b>정상입니다.</b> 드라이브는 HTML을 미리보기 못 합니다. <b>다운로드</b>한 뒤 <b>더블클릭</b>하세요.</p>
+    </details>
+
+    <details>
+      <summary>"Google에서 확인하지 않은 앱"이라고 경고가 떠요</summary>
+      <p><b>정상입니다.</b> 내가 만든 스크립트라 뜨는 경고예요.<br>
+      <b>고급</b> → <b>(안전하지 않음)으로 이동</b> → <b>허용</b>을 누르면 진행됩니다.</p>
+    </details>
+
+    <details>
+      <summary>제출했는데 구글시트에 안 들어와요</summary>
+      <ol class="click">
+        <li>웹 앱 액세스 권한이 <b>"링크가 있는 모든 사용자"</b>인지 확인<br>(배포 → 배포 관리 → 편집 ✏️)</li>
+        <li>코스웨어의 주소가 <b><code>/exec</code>로 끝나는지</b> 확인 (<code>/dev</code> 아님!)</li>
+        <li>주소를 바꾼 뒤 <b>저장</b>했는지, <b>GitHub에 다시 올렸는지</b> 확인</li>
+      </ol>
+    </details>
+
+    <details>
+      <summary>"⚠️ 아직 제출 주소가 설정되지 않았어요"가 떠요</summary>
+      <p>코스웨어 안의 <code>PASTE_WEBAPP_URL</code>을 <b>실제 /exec 주소로 바꾸지 않았거나</b>, 바꾼 뒤 <b>저장을 안 한</b> 상태입니다. 3단계 ④번을 다시 확인하세요.</p>
+    </details>
+
+    <details>
+      <summary>배포했는데 흰 화면이거나 글자가 깨져요</summary>
+      <ol class="click">
+        <li>파일 이름이 <b><code>index.html</code></b>이 맞는지 (한글·공백·대문자 없이)</li>
+        <li>저장할 때 <b>인코딩을 UTF-8</b>로 했는지 (한글 깨짐의 원인)</li>
+        <li>AI가 코드를 바꾸며 구조를 깨뜨렸을 수 있음 → <b>프롬프트 ⑤</b>로 복구</li>
+      </ol>
+    </details>
+
+    <details>
+      <summary>Vercel에서 배포가 실패해요 (빌드 에러)</summary>
+      <p>AI가 <b>React나 여러 개 파일</b>을 만들어줬을 가능성이 큽니다. <code>package.json</code> 같은 파일이 있으면 Vercel이 설치를 시도하다 실패합니다.<br>
+      → <b>프롬프트 ②</b>를 다시 쓰되 <b>"단일 HTML 파일 하나로만"</b>을 강조하세요.</p>
+    </details>
+
+    <details>
+      <summary>GitHub에 어떻게 올리는지 모르겠어요</summary>
+      <p>저장소를 만든 뒤 <b>"uploading an existing file"</b> 링크를 클릭하고, 파일을 <b>드래그</b>해서 놓으면 됩니다. 아래 <b>Commit changes</b>를 누르면 완료입니다.</p>
+    </details>
+
+    <details>
+      <summary>수정했는데 사이트에 반영이 안 돼요</summary>
+      <p>GitHub에 <b>수정된 파일을 다시 올려야</b> 합니다. 저장소에서 파일 클릭 → 연필(✏️) 아이콘 → 수정 → Commit changes. Vercel이 자동으로 다시 배포합니다.</p>
+    </details>
+
+    <details>
+      <summary>AI가 준 코드가 너무 길어서 복사가 안 돼요</summary>
+      <p>AI에게 <b>"설명 없이 코드만 주세요"</b>라고 하면 짧아집니다. 또는 <b>"코드 블록으로 한 번에 주세요"</b>라고 요청하고 코드 블록 우측 상단의 <b>복사 버튼</b>을 쓰세요.</p>
+    </details>
+
+    <div class="note warn" style="margin-top:16px">
+      🆘 <b>3단계(구글시트 연결)에서 도저히 안 되면</b> 손드세요. 강사가 준비한 시트를 드립니다. 받은 주소로 <b>④번부터</b> 이어가면 됩니다.
+    </div>
+  </section>
+
+  <footer>
+    AIEDAP 호남권역 일반교원 AI디지털 융합수업 역량강화 연수<br>
+    <b>교육용 앱 만들고 배포 관리하기</b> · 대면 4차시<br>
+    <span style="font-size:12px">이 페이지의 체크 표시는 내 브라우저에만 저장됩니다.</span>
+  </footer>
+</div>
+
+<a class="toplink" href="#top" title="맨 위로">↑</a>
+
+<script>
+  function cp(id){
+    var t = document.getElementById(id).textContent;
+    function done(){
+      var b = event && event.target;
+      if(b && b.tagName === 'BUTTON'){
+        var o = b.textContent; b.textContent = '✅ 복사됨'; b.disabled = true;
+        setTimeout(function(){ b.textContent = o; b.disabled = false; }, 1500);
+      } else { alert('복사했습니다.'); }
+    }
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(t).then(done, function(){ fb(t, done); });
+    } else { fb(t, done); }
+  }
+  function fb(t, done){
+    var ta = document.createElement('textarea');
+    ta.value = t; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); done(); }
+    catch(e){ alert('복사에 실패했습니다. 직접 선택해서 복사해 주세요.'); }
+    document.body.removeChild(ta);
+  }
+
+  (function(){
+    var KEY = 'aiedap_manual_progress';
+    var boxes = document.querySelectorAll('#chk input[type=checkbox]');
+    var saved = {};
+    try{ saved = JSON.parse(localStorage.getItem(KEY) || '{}'); }catch(e){}
+    boxes.forEach(function(b){
+      if(saved[b.dataset.k]) b.checked = true;
+      b.addEventListener('change', function(){
+        var d = {};
+        boxes.forEach(function(x){ if(x.checked) d[x.dataset.k] = 1; });
+        try{ localStorage.setItem(KEY, JSON.stringify(d)); }catch(e){}
+      });
+    });
+  })();
+</script>
+
+</body>
+</html>
