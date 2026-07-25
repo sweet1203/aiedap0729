@@ -131,6 +131,25 @@
   (function(){
     var f = document.getElementById('quizForm');
     var s = document.getElementById('formStatus');
+
+    // 복사·붙여넣기·잘라내기 차단 — 학생이 직접 입력하도록 유도
+    // (웹에서 완전 차단은 불가하지만, 무심코 붙여넣는 것을 막고 직접 작성 신호를 줍니다)
+    var _guardFields = f.querySelectorAll('input, textarea');
+    ['paste','copy','cut','drop'].forEach(function(evt){
+      _guardFields.forEach(function(el){
+        el.addEventListener(evt, function(e){
+          e.preventDefault();
+          if(evt==='paste'){
+            s.className='formstatus err';
+            s.textContent='✍️ 붙여넣기는 안 돼요. 직접 입력해 주세요.';
+          }
+        });
+      });
+    });
+    _guardFields.forEach(function(el){
+      el.addEventListener('contextmenu', function(e){ e.preventDefault(); });
+      el.addEventListener('dragover', function(e){ e.preventDefault(); });
+    });
     f.addEventListener('submit', function(ev){
       ev.preventDefault();
       if(!SCRIPT_URL || SCRIPT_URL==="PASTE_WEBAPP_URL" || !/^https?:\/\//.test(SCRIPT_URL)){
