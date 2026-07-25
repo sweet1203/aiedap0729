@@ -133,7 +133,7 @@
     var s = document.getElementById('formStatus');
     f.addEventListener('submit', function(ev){
       ev.preventDefault();
-      if(!SCRIPT_URL || SCRIPT_URL==="https://script.google.com/macros/s/AKfycbwcdTQNRpBIQ0xF2Z12m5Btb65qYfiOeVoovPF8GzIO5fedz3y9ryzAyr4WsoLEljco/exec" || !/^https?:\/\//.test(SCRIPT_URL)){
+      if(!SCRIPT_URL || SCRIPT_URL==="PASTE_WEBAPP_URL" || !/^https?:\/\//.test(SCRIPT_URL)){
         s.className='formstatus err';
         s.textContent='⚠️ 아직 제출 주소가 설정되지 않았어요. 선생님께 알려주세요.';
         return;
