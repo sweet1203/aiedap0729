@@ -133,22 +133,34 @@
     var s = document.getElementById('formStatus');
 
     // 복사·붙여넣기·잘라내기 차단 — 학생이 직접 입력하도록 유도
-    // (웹에서 완전 차단은 불가하지만, 무심코 붙여넣는 것을 막고 직접 작성 신호를 줍니다)
+    // 모바일 붙여넣기(paste 이벤트) + IME 붙여넣기(beforeinput) + 데스크톱 단축키까지 차단.
+    // 못 막는 것: 손타이핑·예측입력·음성입력·개발자도구 (이건 기술적으로 '붙여넣기'가 아님)
+    function _warnPaste(){
+      s.className='formstatus err';
+      s.textContent='✍️ 붙여넣기는 안 돼요. 직접 입력해 주세요.';
+    }
+    function _blockPaste(e){ e.preventDefault(); _warnPaste(); }
     var _guardFields = f.querySelectorAll('input, textarea');
-    ['paste','copy','cut','drop'].forEach(function(evt){
-      _guardFields.forEach(function(el){
-        el.addEventListener(evt, function(e){
-          e.preventDefault();
-          if(evt==='paste'){
-            s.className='formstatus err';
-            s.textContent='✍️ 붙여넣기는 안 돼요. 직접 입력해 주세요.';
-          }
-        });
+    _guardFields.forEach(function(el){
+      el.addEventListener('paste', _blockPaste);
+      el.addEventListener('drop', _blockPaste);
+      el.addEventListener('copy', function(e){ e.preventDefault(); });
+      el.addEventListener('cut', function(e){ e.preventDefault(); });
+      el.addEventListener('dragover', function(e){ e.preventDefault(); });
+      el.addEventListener('contextmenu', function(e){ e.preventDefault(); });
+      // 모바일·IME: 붙여넣기/드롭으로 들어오는 입력을 한 번 더 차단
+      el.addEventListener('beforeinput', function(e){
+        var it = e.inputType || '';
+        if(it === 'insertFromPaste' || it === 'insertFromDrop' || it === 'insertFromPasteAsQuotation'){ _blockPaste(e); }
       });
     });
-    _guardFields.forEach(function(el){
-      el.addEventListener('contextmenu', function(e){ e.preventDefault(); });
-      el.addEventListener('dragover', function(e){ e.preventDefault(); });
+    // 데스크톱 단축키(Ctrl/Cmd + V·C·X) 차단
+    f.addEventListener('keydown', function(e){
+      var k = (e.key || '').toLowerCase();
+      if((e.metaKey || e.ctrlKey) && (k === 'v' || k === 'c' || k === 'x')){
+        e.preventDefault();
+        if(k === 'v') _warnPaste();
+      }
     });
     f.addEventListener('submit', function(ev){
       ev.preventDefault();
