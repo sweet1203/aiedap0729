@@ -246,20 +246,22 @@
 
     <div class="pbox">
       <div class="phead"><h4>💬 프롬프트 ② — 코스웨어 채우기 <b style="color:var(--danger)">★ 가장 중요</b></h4><button class="btn ghost" onclick="cp('p2')">복사</button></div>
-      <textarea class="p" spellcheck="false" id="p2">아래 HTML 템플릿의 ✏️ 표시된 부분을 내 교과 내용으로 채워서 완성된 HTML로 돌려줘.
+      <textarea class="p" spellcheck="false" id="p2">아래 HTML 템플릿의 '수업 내용 영역'을 내 교과 내용으로 풍부하게 채워, 완성된 HTML 한 개로 돌려줘.
 
-[반드시 지킬 것]
-1. 구조, CSS, 폼(form), script 부분은 절대 바꾸지 마세요.
-2. ✏️ 표시가 있는 자리의 텍스트만 교체하세요.
-3. 반드시 단일 HTML 파일 하나로만 주세요. (React, 여러 파일, 빌드 설정 금지)
-4. SCRIPT_URL 이 들어간 줄은 그대로 두세요.
-5. 내가 준 학습 내용 안에서만 쓰고, 없는 내용을 지어내지 마세요.
+[꼭 지킬 것]
+1. 맨 아래 '오늘의 정리 질문' <form> 과 <script>(SCRIPT_URL 포함)는 한 글자도 바꾸지 마세요.
+2. <style>(CSS)는 그대로 두고, 제공된 클래스만 활용하세요: .goal .lead .concept .eq .example .imgph .steps .tip
+3. 수업 내용 영역(1 오늘 배우는 것 ~ 4 해보기)을 넉넉하게 채워 주세요:
+   - 1 학습목표: 교과 / 인공지능 / 교과+AI 융합 3분할
+   - 2 왜 배울까: 흥미를 끄는 도입 1~2문장 (.lead)
+   - 3 핵심 개념: .concept 블록을 개념 수만큼 여러 개(2~4개). 각 블록은 제목 + 설명 2~4문장,
+     가능하면 .example(예시)나 .eq(핵심 공식·문장 강조)를 넣기. .imgph(그림 자리)는 그대로 두기.
+   - 4 해보기: .steps 목록으로 학생이 실제로 하는 단계 3~5개 + .tip(헷갈리는 점)
+4. 반드시 단일 HTML 파일 하나로만. (React·여러 파일·빌드 설정 금지)
+5. 내가 준 학습 내용에 근거해 쓰고, 사실을 지어내지 마세요.
 
 [내 수업 정보]
-- 교과:
-- 학년:
-- 단원명:
-- 주제:
+- 교과 / 학년 / 단원 / 주제:
 
 [학습 내용]
 (여기에 1단계에서 복사한 NotebookLM 요약을 붙여넣기)

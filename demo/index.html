@@ -3,12 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- [완성 예시] 수업_템플릿.html의 ✏️ 자리를 실제 교과(중2 과학 광합성)로 채운 견본.
-     구조·CSS·폼·script는 템플릿 그대로 두고, 내용과 색(--accent)만 바꿨습니다. -->
-<title>1차시 — 광합성과 AI의 눈</title>
+<!-- [완성 예시] 수업_템플릿을 중2 과학 '광합성'으로 채운 견본 (단일 페이지) -->
+<title>광합성과 AI의 눈 — 코스웨어</title>
 <style>
   :root{
-    --accent:#2f9e44; --accent-2:#69db7c;   /* index와 같은 초록 */
+    --accent:#2f9e44; --accent-2:#69db7c;
     --ink:#212529; --muted:#868e96; --line:#e9ecef; --bg:#f8f9fa; --card:#fff;
     --ok:#2b8a3e; --err:#e03131;
     --shadow:0 3px 14px rgba(0,0,0,.07); --radius:16px;
@@ -22,25 +21,31 @@
   .hero .num{font-size:13px;font-weight:800;opacity:.9}
   .hero h1{margin:6px 0 8px;font-size:26px;letter-spacing:-.5px}
   .hero p{margin:0;opacity:.96;font-size:15px}
-  .homebar{margin:18px 0 0}
-  .homebtn{display:inline-block;text-decoration:none;background:#fff;color:var(--accent);border:1px solid var(--line);
-    font-weight:700;font-size:14px;padding:8px 14px;border-radius:999px;box-shadow:var(--shadow)}
 
   section{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
     padding:22px 22px 20px;margin-top:20px;box-shadow:var(--shadow)}
   h2{display:flex;align-items:center;gap:10px;font-size:19px;margin:0 0 14px}
   h2 .n{display:inline-flex;width:28px;height:28px;align-items:center;justify-content:center;
-    background:var(--accent);color:#fff;border-radius:8px;font-size:14px;font-weight:800}
+    background:var(--accent);color:#fff;border-radius:8px;font-size:14px;font-weight:800;flex:none}
 
   .goals{display:grid;gap:10px}
   .goal{border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:10px;padding:10px 14px;background:#f4fbf6}
   .goal b{color:var(--accent)}
 
-  .step{border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-top:12px}
-  .step h3{margin:0 0 6px;font-size:16px}
-  .step p{margin:6px 0}
-  .eq{display:inline-block;background:#f4fbf6;border:1px solid #b2f2bb;border-radius:10px;
-    padding:8px 14px;font-weight:700;color:#2b8a3e;margin:6px 0}
+  .lead{font-size:16px;margin:0}
+  .concept{border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-top:12px}
+  .concept h3{margin:0 0 6px;font-size:16px;color:var(--accent)}
+  .concept p{margin:6px 0}
+  .eq{display:inline-block;background:#ebfbee;border:1px solid #b2f2bb;border-radius:10px;
+    padding:8px 14px;font-weight:700;color:var(--accent);margin:8px 0}
+  .example{background:#f4fbf6;border:1px solid #b2f2bb;border-radius:10px;padding:10px 14px;margin-top:10px;font-size:14.5px}
+  .example b{color:#2b8a3e}
+  .imgph{border:2px dashed var(--line);border-radius:12px;padding:22px;text-align:center;color:var(--muted);margin-top:12px;font-size:14px}
+  .steps{counter-reset:st;list-style:none;padding:0;margin:8px 0 0}
+  .steps li{position:relative;padding:9px 0 9px 36px;border-bottom:1px solid var(--line)}
+  .steps li:last-child{border:none}
+  .steps li::before{counter-increment:st;content:counter(st);position:absolute;left:0;top:8px;width:25px;height:25px;
+    background:var(--accent);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800}
   .tip{background:#fff9db;border:1px solid #ffe066;border-radius:10px;padding:10px 14px;margin-top:12px;font-size:14px}
 
   .quiz label{display:block;font-weight:700;font-size:14px;margin:0 0 6px}
@@ -62,9 +67,9 @@
 <body>
 
 <header class="hero">
-  <span class="num">1차시</span>
-  <h1>광합성과 AI의 눈</h1>
-  <p>식물이 스스로 양분을 만드는 원리를 정리하고, AI가 잎 사진을 어떻게 판단하는지 따져봅니다.</p>
+  <span class="num">중2 과학 · 식물과 에너지</span>
+  <h1>🌱 광합성과 AI의 눈</h1>
+  <p>식물이 스스로 양분을 만드는 원리를 배우고, AI로 잎을 관찰해 봅니다.</p>
 </header>
 
 <div class="wrap">
@@ -72,36 +77,58 @@
   <section>
     <h2><span class="n">1</span> 오늘 배우는 것</h2>
     <div class="goals">
-      <div class="goal"><b>교과</b> — 광합성이 일어나는 장소(엽록체)와, 필요한 재료(빛·물·이산화탄소) 및 산물(포도당·산소)을 설명할 수 있다.</div>
-      <div class="goal"><b>인공지능</b> — AI(이미지 인식)가 잎 사진으로 식물의 상태를 판별할 수 있음을 이해하고, AI가 잘못 판단할 수 있는 상황을 예로 든다.</div>
-      <div class="goal"><b>교과 + AI 융합</b> — 광합성 지식을 근거로, "AI가 무엇을 보고 판단했는지"를 설명하고 그 판단이 맞는지 검증한다.</div>
+      <div class="goal"><b>교과</b> — 광합성에 필요한 재료와 만들어지는 물질을 설명하고, 광합성이 일어나는 장소와 조건을 안다.</div>
+      <div class="goal"><b>인공지능</b> — AI가 잎 사진(이미지)을 어떻게 인식하는지 체험하고, 무엇을 근거로 판단하는지 이해한다.</div>
+      <div class="goal"><b>교과 + AI 융합</b> — 광합성 지식을 바탕으로 "식물을 돕는 AI"를 상상하고, AI의 판단을 교과 지식으로 검증한다.</div>
     </div>
   </section>
 
   <section>
-    <h2><span class="n">2</span> 이렇게 해봅시다</h2>
-
-    <div class="step">
-      <h3>활동 1 · 광합성 한 줄로 정리하기</h3>
-      <p>식물의 잎 세포 속 <b>엽록체</b>에서, 빛 에너지를 이용해 물과 이산화탄소로 양분을 만듭니다. 식으로 적으면:</p>
-      <p class="eq">빛 + 물(H₂O) + 이산화탄소(CO₂) &nbsp;→&nbsp; 포도당(양분) + 산소(O₂)</p>
-      <p>즉 식물은 <b>스스로 양분을 만드는 생산자</b>이고, 그 부산물로 우리가 숨 쉬는 산소가 나옵니다.</p>
-    </div>
-
-    <div class="step">
-      <h3>활동 2 · AI에게 잎 사진을 보여주면?</h3>
-      <p>요즘은 잎 사진 한 장을 AI에 넣으면 "건강한 잎인지", "무슨 식물인지"를 알려주는 앱이 있습니다. AI는 잎의 <b>색·모양·무늬</b> 같은 겉모습을 근거로 판단합니다.</p>
-      <p>그런데 AI는 광합성을 "이해"하는 게 아니라 <b>사진의 패턴</b>만 봅니다. 그래서 그늘이 진 사진, 병든 잎, 단풍 든 잎을 보고 엉뚱하게 판단하기도 합니다. AI의 판단을 <b>우리가 배운 지식으로 검증</b>하는 게 오늘의 핵심입니다.</p>
-    </div>
-
-    <div class="tip">💡 헷갈리기 쉬운 점 — 광합성은 <b>낮(빛이 있을 때)</b>에 일어나고, 식물도 <b>호흡</b>은 밤낮 계속합니다. "밤에는 광합성을 안 한다"와 "식물은 숨을 안 쉰다"는 다른 이야기예요.</div>
+    <h2><span class="n">2</span> 왜 배울까?</h2>
+    <p class="lead">식물은 밥을 먹지 않는데도 무럭무럭 자랍니다. 어떻게 그럴 수 있을까요? 사실 식물은 햇빛으로 <b>스스로 양분을 만드는 요리사</b>예요. 그 비밀이 바로 <b>광합성</b>입니다.</p>
   </section>
 
   <section>
-    <h2><span class="n">3</span> 오늘의 정리 질문 ✍️ <span style="font-size:13px;color:var(--muted);font-weight:600">(답을 적고 제출하면 선생님께 전송돼요)</span></h2>
+    <h2><span class="n">3</span> 핵심 개념</h2>
+
+    <div class="concept">
+      <h3>① 광합성이란?</h3>
+      <p>잎 속 <b>엽록체</b>가 <b>빛 에너지</b>를 이용해, 뿌리에서 온 물과 잎으로 들어온 이산화탄소를 재료로 <b>양분(포도당)</b>을 만드는 과정입니다.</p>
+      <div class="eq">빛 + 물(H₂O) + 이산화탄소(CO₂) &nbsp;→&nbsp; 포도당(양분) + 산소(O₂)</div>
+      <div class="example">💡 예: 맑은 날 물풀을 물에 담가 두면 잎에서 <b>산소 방울</b>이 보글보글 올라와요. 광합성으로 산소가 나온다는 증거!</div>
+    </div>
+
+    <div class="concept">
+      <h3>② 무엇이 들어가고, 무엇이 나올까?</h3>
+      <p><b>필요한 것(재료) 3가지</b>: 빛 · 물 · 이산화탄소<br>
+      <b>만들어지는 것(산물) 2가지</b>: 포도당(식물의 양분) · 산소</p>
+      <div class="example">💡 우리가 마시는 <b>산소</b>가 바로 식물이 광합성으로 내놓은 것이에요. 먹이사슬의 출발점도 이 포도당이고요.</div>
+    </div>
+
+    <div class="concept">
+      <h3>③ 낮과 밤은 어떻게 다를까?</h3>
+      <p>광합성은 <b>빛이 있어야</b> 일어나므로 주로 <b>낮</b>에 이루어집니다. 반면 <b>호흡</b>은 사람처럼 <b>밤낮 계속</b> 합니다.</p>
+    </div>
+
+    <div class="imgph">🖼️ 잎의 단면과 엽록체 그림, 또는 광합성 과정 도표를 여기에 넣으면 이해가 쉬워집니다.</div>
+  </section>
+
+  <section>
+    <h2><span class="n">4</span> 해보기 — AI의 눈으로 잎 보기</h2>
+    <ol class="steps">
+      <li>교실·창가의 식물 <b>잎을 관찰</b>하고 색과 모양을 살펴보세요.</li>
+      <li>잎 사진을 <b>AI에게 보여주고</b> 물어보세요: "무슨 식물이야? 건강해 보여?"</li>
+      <li>AI의 답을 <b>오늘 배운 광합성 지식으로 따져보세요.</b> (초록이 진한 잎이 왜 건강할까? 엽록체·광합성과 연결!)</li>
+      <li>알게 된 점과 궁금한 점을 아래 <b>정리 질문</b>에 적어보세요.</li>
+    </ol>
+    <div class="tip">💡 헷갈리기 쉬운 점 — "밤에는 광합성을 안 한다"와 "식물은 숨을 안 쉰다"는 <b>다른 이야기</b>예요. 광합성은 낮에, 호흡은 밤낮 계속!</div>
+  </section>
+
+  <section>
+    <h2><span class="n">5</span> 오늘의 정리 질문 ✍️ <span style="font-size:13px;color:var(--muted);font-weight:600">(답을 적고 제출하면 선생님께 전송돼요)</span></h2>
 
     <form class="quiz" id="quizForm">
-      <input type="hidden" name="실습" value="1차시-광합성">
+      <input type="hidden" name="실습" value="광합성">
 
       <div class="row">
         <label>학번 <input name="학번" required placeholder="예: 20101" inputmode="numeric" autocomplete="off"></label>
@@ -122,20 +149,12 @@
 </div>
 
 <script>
-  // [예시] 실제 사용 시 여기에 배포한 Apps Script 주소(.../exec)를 넣습니다.
   var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwcdTQNRpBIQ0xF2Z12m5Btb65qYfiOeVoovPF8GzIO5fedz3y9ryzAyr4WsoLEljco/exec";
 
   (function(){
     var f = document.getElementById('quizForm');
     var s = document.getElementById('formStatus');
-
-    // 복사·붙여넣기·잘라내기 차단 — 학생이 직접 입력하도록 유도
-    // 모바일 붙여넣기(paste 이벤트) + IME 붙여넣기(beforeinput) + 데스크톱 단축키까지 차단.
-    // 못 막는 것: 손타이핑·예측입력·음성입력·개발자도구 (이건 기술적으로 '붙여넣기'가 아님)
-    function _warnPaste(){
-      s.className='formstatus err';
-      s.textContent='✍️ 붙여넣기는 안 돼요. 직접 입력해 주세요.';
-    }
+    function _warnPaste(){ s.className='formstatus err'; s.textContent='✍️ 붙여넣기는 안 돼요. 직접 입력해 주세요.'; }
     function _blockPaste(e){ e.preventDefault(); _warnPaste(); }
     var _guardFields = f.querySelectorAll('input, textarea');
     _guardFields.forEach(function(el){
@@ -145,26 +164,19 @@
       el.addEventListener('cut', function(e){ e.preventDefault(); });
       el.addEventListener('dragover', function(e){ e.preventDefault(); });
       el.addEventListener('contextmenu', function(e){ e.preventDefault(); });
-      // 모바일·IME: 붙여넣기/드롭으로 들어오는 입력을 한 번 더 차단
       el.addEventListener('beforeinput', function(e){
         var it = e.inputType || '';
         if(it === 'insertFromPaste' || it === 'insertFromDrop' || it === 'insertFromPasteAsQuotation'){ _blockPaste(e); }
       });
     });
-    // 데스크톱 단축키(Ctrl/Cmd + V·C·X) 차단
     f.addEventListener('keydown', function(e){
       var k = (e.key || '').toLowerCase();
-      if((e.metaKey || e.ctrlKey) && (k === 'v' || k === 'c' || k === 'x')){
-        e.preventDefault();
-        if(k === 'v') _warnPaste();
-      }
+      if((e.metaKey || e.ctrlKey) && (k === 'v' || k === 'c' || k === 'x')){ e.preventDefault(); if(k === 'v') _warnPaste(); }
     });
     f.addEventListener('submit', function(ev){
       ev.preventDefault();
       if(!SCRIPT_URL || SCRIPT_URL==="PASTE_WEBAPP_URL" || !/^https?:\/\//.test(SCRIPT_URL)){
-        s.className='formstatus err';
-        s.textContent='⚠️ 아직 제출 주소가 설정되지 않았어요. 선생님께 알려주세요.';
-        return;
+        s.className='formstatus err'; s.textContent='⚠️ 아직 제출 주소가 설정되지 않았어요. 선생님께 알려주세요.'; return;
       }
       var btn = f.querySelector('.submitbtn');
       var body = new URLSearchParams(new FormData(f));
