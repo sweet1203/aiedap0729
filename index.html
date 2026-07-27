@@ -12,14 +12,14 @@
     --shadow:0 3px 14px rgba(0,0,0,.07); --radius:14px;
   }
   *{box-sizing:border-box} html{scroll-behavior:smooth; scroll-padding-top:64px}
-  body{margin:0;background:var(--bg);color:var(--ink);line-height:1.75;font-size:15.5px;
+  body{margin:0;background:var(--bg);color:var(--ink);line-height:1.75;font-size:15.5px;word-break:keep-all;overflow-wrap:break-word;
     font-family:"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,-apple-system,sans-serif}
   .wrap{max-width:900px;margin:0 auto;padding:0 16px 90px}
 
   /* 상단 고정 네비 */
   nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.95);backdrop-filter:blur(8px);
-    border-bottom:1px solid var(--line);padding:8px 0}
-  nav .inner{max-width:900px;margin:0 auto;padding:0 16px;display:flex;gap:6px;overflow-x:auto}
+    border-bottom:1px solid var(--line);padding:8px 0;overflow:hidden}
+  nav .inner{width:100%;max-width:900px;margin:0 auto;padding:0 16px;display:flex;gap:6px;overflow-x:auto}
   nav a{flex:none;text-decoration:none;color:var(--muted);font-weight:700;font-size:13px;
     padding:6px 11px;border-radius:999px;white-space:nowrap}
   nav a:hover{background:var(--soft);color:var(--accent)}
@@ -66,6 +66,7 @@
   .kbd{display:inline-block;background:#f1f3f5;border:1px solid #dee2e6;border-bottom-width:2px;
     border-radius:5px;padding:1px 7px;font-size:13px;font-weight:700}
   .path{background:#f1f3f5;border-radius:6px;padding:2px 8px;font-weight:700;font-size:14px}
+  code{overflow-wrap:anywhere;word-break:break-word}
 
   /* 프롬프트 */
   .pbox{margin-top:14px}
@@ -84,6 +85,7 @@
 
   /* 알림 박스 */
   .note{border-radius:10px;padding:12px 15px;margin-top:12px;font-size:14px}
+  .note,.step,section{min-width:0}
   .note.warn{background:var(--warnbg);border:1px solid #ffc078}
   .note.danger{background:var(--dangerbg);border:1px solid #ffa8a8}
   .note.ok{background:var(--okbg);border:1px solid #8ce99a}
@@ -108,6 +110,12 @@
   .toplink{position:fixed;right:16px;bottom:16px;background:var(--accent);color:#fff;text-decoration:none;
     width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;
     font-size:20px;box-shadow:0 4px 14px rgba(0,0,0,.2);z-index:60}
+  @media (max-width:600px){
+    html{scroll-padding-top:104px}
+    nav .inner{flex-wrap:wrap;overflow-x:visible;gap:4px;padding:0 10px}
+    nav a{font-size:12px;padding:5px 8px}
+    section{padding:18px 16px}
+  }
   @media print{ nav,.toplink,.btn,.dlbtn{display:none} section{break-inside:avoid;box-shadow:none} }
 </style>
 </head>
@@ -215,7 +223,7 @@
     </div>
 
     <div class="pbox">
-      <div class="phead"><h4>💬 프롬프트 ① — 교과 내용 요약</h4><button class="btn ghost" onclick="cp('p1')">복사</button></div>
+      <div class="phead"><h4>💬 프롬프트 ① — 교과 내용 요약</h4><button class="btn ghost" onclick="cp('p1', this)">복사</button></div>
       <textarea class="p" spellcheck="false" id="p1">이 단원의 핵심 개념을 중학교 2학년 학생이 이해할 수 있는 수준으로 정리해줘.
 
 1) 핵심 개념 5~7문장
@@ -245,18 +253,18 @@
     </div>
 
     <div class="pbox">
-      <div class="phead"><h4>💬 프롬프트 ② — 코스웨어 채우기 <b style="color:var(--danger)">★ 가장 중요</b></h4><button class="btn ghost" onclick="cp('p2')">복사</button></div>
+      <div class="phead"><h4>💬 프롬프트 ② — 코스웨어 채우기 <b style="color:var(--danger)">★ 가장 중요</b></h4><button class="btn ghost" onclick="cp('p2', this)">복사</button></div>
       <textarea class="p" spellcheck="false" id="p2">아래 HTML 템플릿의 '수업 내용 영역'을 내 교과 내용으로 풍부하게 채워, 완성된 HTML 한 개로 돌려줘.
 
 [꼭 지킬 것]
 1. 맨 아래 '오늘의 정리 질문' <form> 과 <script>(SCRIPT_URL 포함)는 한 글자도 바꾸지 마세요.
-2. <style>(CSS)는 그대로 두고, 제공된 클래스만 활용하세요: .goal .lead .concept .eq .example .imgph .steps .tip
-3. 수업 내용 영역(1 오늘 배우는 것 ~ 4 해보기)을 넉넉하게 채워 주세요:
+2. <style>(CSS)는 그대로 두고, 제공된 클래스만 활용하세요: .goal .lead .concept .eq .example .mis .oxcheck .oxitem .steps .tip
+3. 수업 내용 영역(1 오늘 배우는 것 ~ 5 해보기)을 수업자료처럼 넉넉하게 채워 주세요:
    - 1 학습목표: 교과 / 인공지능 / 교과+AI 융합 3분할
-   - 2 왜 배울까: 흥미를 끄는 도입 1~2문장 (.lead)
-   - 3 핵심 개념: .concept 블록을 개념 수만큼 여러 개(2~4개). 각 블록은 제목 + 설명 2~4문장,
-     가능하면 .example(예시)나 .eq(핵심 공식·문장 강조)를 넣기. .imgph(그림 자리)는 그대로 두기.
-   - 4 해보기: .steps 목록으로 학생이 실제로 하는 단계 3~5개 + .tip(헷갈리는 점)
+   - 2 왜 배울까: 실생활 상황 질문 + 도입 예시 + 사전 확인
+   - 3 핵심 개념: .concept 블록을 개념 수만큼 여러 개(2~4개). 각 블록은 뜻, 왜 중요한지, 예시(.example), 헷갈리기 쉬운 점(.mis)을 포함
+   - 4 개념 확인 OX: 쉬운 OX 문항 3~4개와 정답·이유. 이 영역은 <form> 밖이라 구글시트로 수집되지 않음
+   - 5 해보기: .steps 목록으로 학생이 실제로 하는 단계 3~5개 + 학생이 적을 말 예시 + .tip
 4. 반드시 단일 HTML 파일 하나로만. (React·여러 파일·빌드 설정 금지)
 5. 내가 준 학습 내용에 근거해 쓰고, 사실을 지어내지 마세요.
 
@@ -275,20 +283,20 @@
     </div>
 
     <div class="pbox">
-      <div class="phead"><h4>💬 프롬프트 ③ — 정리 질문 4개 만들기</h4><button class="btn ghost" onclick="cp('p3')">복사</button></div>
+      <div class="phead"><h4>💬 프롬프트 ③ — 정리 질문 4개 만들기</h4><button class="btn ghost" onclick="cp('p3', this)">복사</button></div>
       <textarea class="p" spellcheck="false" id="p3">위 학습 내용으로 학생 정리 질문 4개를 만들어줘.
 
 - Q1, Q2: 교과 내용을 이해했는지 확인하는 질문
-- Q3: 오늘 배운 교과 내용에 AI를 융합하면 무엇을 만들거나 해결할 수 있을지 상상해보는 질문
-      (예: "오늘 배운 ○○ 지식에 AI를 더한다면, 어떤 것을 만들어보고 싶나요? 왜 그것이 도움이 될까요?")
-- Q4: 오늘 배운 것을 한 문장으로 정리하는 질문
+- Q3: AI를 활용할 때 도움이 되는 점과 조심해야 할 점을 교과 내용과 연결해 생각하게 하는 질문
+      (예: "AI를 활용해 이 문제를 해결한다면, 어떤 점은 도움 되고 어떤 점은 조심해야 할까요? 이유는 무엇인가요?")
+- Q4: 오늘 배운 것을 한 문장으로 정리하고 근거를 덧붙이는 질문
 
 정답을 외워서 쓰는 질문 말고, 자기 생각을 쓰게 하는 질문으로 만들어줘.
 Q3은 반드시 이 수업의 교과 내용과 자연스럽게 연결되게 하고, AI를 억지로 끼워 넣은 느낌이 들지 않게 해줘.</textarea>
     </div>
 
     <div class="pbox">
-      <div class="phead"><h4>💬 프롬프트 ④ — 수업목표 3분할 (산출물에 그대로 씁니다)</h4><button class="btn ghost" onclick="cp('p4')">복사</button></div>
+      <div class="phead"><h4>💬 프롬프트 ④ — 수업목표 3분할 (산출물에 그대로 씁니다)</h4><button class="btn ghost" onclick="cp('p4', this)">복사</button></div>
       <textarea class="p" spellcheck="false" id="p4">이 수업의 목표를 세 가지로 나눠서 각각 한 문장으로 써줘.
 
 ① 교과: 이 수업으로 알게 되는 교과 지식·개념
@@ -331,7 +339,7 @@ Q3은 반드시 이 수업의 교과 내용과 자연스럽게 연결되게 하�
         <li><b>1단계에서 압축 푼 <code>Code_복사용.txt</code></b>를 메모장으로 열어 전체 복사 → 여기에 붙여넣기</li>
         <li><b>저장</b> (💾 아이콘 또는 <span class="kbd">Ctrl</span>+<span class="kbd">S</span>)</li>
       </ol>
-      <div class="note warn">⚠️ <b>02번 파일을 구글 문서로 열지 마세요.</b> 따옴표가 자동으로 바뀌어 코드가 깨집니다. <b>.txt 화면에서 바로 복사</b>하세요.</div>
+      <div class="note warn">⚠️ <b>01번 ZIP 안의 Code_복사용.txt를 구글 문서로 열지 마세요.</b> 따옴표가 자동으로 바뀌어 코드가 깨집니다. 압축을 푼 뒤 <b>메모장/텍스트 편집기에서 바로 복사</b>하세요.</div>
     </div>
 
     <div class="step">
@@ -497,7 +505,7 @@ Q3은 반드시 이 수업의 교과 내용과 자연스럽게 연결되게 하�
     <p class="lead">아래 상자는 <b>직접 편집할 수 있습니다.</b> 표시된 자리에 내 내용을 넣고 <b>복사</b>를 누르면 편집한 그대로 복사됩니다.</p>
 
     <div class="pbox">
-      <div class="phead"><h4>⑤ 코스웨어가 이상하게 나올 때 (복구)</h4><button class="btn ghost" onclick="cp('p5')">복사</button></div>
+      <div class="phead"><h4>⑤ 코스웨어가 이상하게 나올 때 (복구)</h4><button class="btn ghost" onclick="cp('p5', this)">복사</button></div>
       <textarea class="p" spellcheck="false" id="p5">방금 준 HTML이 브라우저에서 제대로 안 나옵니다.
 
 원래 템플릿의 구조·CSS·폼·script를 그대로 유지하면서 다시 만들어주세요.
@@ -506,7 +514,7 @@ Q3은 반드시 이 수업의 교과 내용과 자연스럽게 연결되게 하�
     </div>
 
     <div class="pbox">
-      <div class="phead"><h4>⑥ 내용을 더 쉽게 바꾸고 싶을 때</h4><button class="btn ghost" onclick="cp('p6')">복사</button></div>
+      <div class="phead"><h4>⑥ 내용을 더 쉽게 바꾸고 싶을 때</h4><button class="btn ghost" onclick="cp('p6', this)">복사</button></div>
       <textarea class="p" spellcheck="false" id="p6">이 코스웨어의 설명 부분이 학생에게 조금 어려운 것 같습니다.
 
 - 문장을 더 짧게
@@ -517,17 +525,17 @@ Q3은 반드시 이 수업의 교과 내용과 자연스럽게 연결되게 하�
     </div>
 
     <div class="pbox">
-      <div class="phead"><h4>⑦ 활동을 하나 더 넣고 싶을 때</h4><button class="btn ghost" onclick="cp('p7')">복사</button></div>
-      <textarea class="p" spellcheck="false" id="p7">「이렇게 해봅시다」 부분에 활동을 하나 더 추가해주세요.
+      <div class="phead"><h4>⑦ 활동을 하나 더 넣고 싶을 때</h4><button class="btn ghost" onclick="cp('p7', this)">복사</button></div>
+      <textarea class="p" spellcheck="false" id="p7">「해보기」 부분에 활동 단계를 하나 더 추가해주세요.
 
 추가할 활동: (여기에 원하는 활동을 적으세요)
 
-기존 활동 카드와 같은 형식(div class="step")으로 만들고,
+기존 <ol class="steps"> 안에 <li>활동 내용</li> 형식으로 추가하고,
 구조·CSS·폼·script는 그대로 두세요. 단일 HTML 파일로 주세요.</textarea>
     </div>
 
     <div class="pbox">
-      <div class="phead"><h4>⑧ 수업지도안 문장 다듬기 (연수 후)</h4><button class="btn ghost" onclick="cp('p8')">복사</button></div>
+      <div class="phead"><h4>⑧ 수업지도안 문장 다듬기 (연수 후)</h4><button class="btn ghost" onclick="cp('p8', this)">복사</button></div>
       <textarea class="p" spellcheck="false" id="p8">교원연수 산출물에 넣을 문장을 공문서 문체로 다듬어주세요.
 
 [반드시 지킬 것]
@@ -617,11 +625,12 @@ Q3은 반드시 이 수업의 교과 내용과 자연스럽게 연결되게 하�
 <a class="toplink" href="#top" title="맨 위로">↑</a>
 
 <script>
-  function cp(id){
+  function cp(id, btn){
     var el = document.getElementById(id);
     var t = (el.tagName === 'TEXTAREA' || el.tagName === 'INPUT') ? el.value : el.textContent;
+    var trigger = btn || document.activeElement;
     function done(){
-      var b = event && event.target;
+      var b = trigger;
       if(b && b.tagName === 'BUTTON'){
         var o = b.textContent; b.textContent = '✅ 복사됨'; b.disabled = true;
         setTimeout(function(){ b.textContent = o; b.disabled = false; }, 1500);
