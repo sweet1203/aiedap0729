@@ -110,10 +110,8 @@
       <div><label>연수강사(마스터교원)</label><input id="f_lecturer" placeholder="강사 이름"></div>
     </div>
 
-    <label>대면 연수 1일차 일시·장소</label>
-    <input id="f_face1" placeholder="예: 2026년 8월 5일(수) 09:00~13:00(4시간) / ○○중학교 컴퓨터실">
-    <label>대면 연수 2일차 일시·장소 <span class="hint">없으면 비워두세요</span></label>
-    <input id="f_face2" placeholder="(2일차가 있을 때만)">
+    <label>대면 연수 일시·장소 <span class="hint">고정 — 수정 불가</span></label>
+    <input id="f_face1" value="2026년 7월 29일(수) 09:00~13:00(4시간) / 대성여자고등학교 AI팩토리실" readonly style="background:#f1f3f5">
 
     <label>수업 실천 일시·장소 <span class="hint">2차시 · 보고서 작성 시간 포함</span></label>
     <input id="f_prac" placeholder="예: 2026년 8월 20일(목) 10:00~12:00(2시간) / 2학년 3반 교실">
@@ -236,7 +234,7 @@
 
 <script>
   var FIELDS = ['f_office','f_level','f_school','f_name','f_subject','f_lecturer',
-    'f_face1','f_face2','f_prac','f_target','f_count',
+    'f_prac','f_target','f_count',
     'f_unit','f_grade','f_topic','f_chasi','f_tools','f_url',
     'f_flow','f_intent','f_goal1','f_goal2','f_goal3',
     'f_react','f_good','f_bad','f_etc'];
@@ -297,8 +295,7 @@
         level=v('f_level'), office=or(v('f_office'),'○○교육청'),
         subj=or(v('f_subject'),'○○'),
         lect=or(v('f_lecturer'),'○○○'),
-        face1=or(v('f_face1'),'2026년 ○월 ○일(○) 00:00~00:00(4시간) / ○○'),
-        face2=v('f_face2'),
+        face1=or(v('f_face1'),'2026년 7월 29일(수) 09:00~13:00(4시간) / 대성여자고등학교 AI팩토리실'),
         prac=or(v('f_prac'),'2026년 ○월 ○일(○) 00:00~00:00(2시간) / ○○'),
         target=or(v('f_target'),'○학년 학생'), count=or(v('f_count'),'00'),
         grade=or(v('f_grade'),'○학년'),
@@ -320,7 +317,7 @@
       '성명: '+name+'\n'+
       '연수 차시: 6차시\n'+
       '연수강사명: '+lect+'\n'+
-      '대면 연수 일시(4차시): '+face1+(face2?('\n                       '+face2):'')+'\n'+
+      '대면 연수 일시(4차시): '+face1+'\n'+
       '수업 실천 일시(2차시): '+prac+'\n'+
       '수업 실천 대상: '+target+'\n'+
       '대상 인원 수: '+count+'명\n'+
