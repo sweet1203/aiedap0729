@@ -56,6 +56,11 @@
   .oxitem summary{cursor:pointer;color:var(--accent);font-weight:800;font-size:14px}
   .answer{margin:8px 0 0;color:var(--ink);font-size:14px}
   .eq{word-break:normal;overflow-wrap:anywhere}
+  .oxchoice{cursor:pointer;font-family:inherit}
+  .oxchoice.correct{background:var(--ok);color:#fff;border-color:var(--ok)}
+  .oxchoice.wrong{background:var(--err);color:#fff;border-color:var(--err)}
+  .oxfb{margin:8px 0 0;font-weight:800;font-size:14px}
+  .oxfb.ok{color:var(--ok)} .oxfb.err{color:var(--err)}
 
   .quiz label{display:block;font-weight:700;font-size:14px;margin:0 0 6px}
   .quiz input,.quiz textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px 12px;
@@ -131,12 +136,12 @@
 
   <section>
     <h2><span class="n">4</span> 개념 확인 OX</h2>
-    <p class="lead">아래 OX는 바로 개념을 확인하는 활동입니다. 답은 구글시트로 전송되지 않습니다.</p>
+    <p class="lead">아래 O 또는 X를 눌러 바로 정답을 확인해 보세요. (이 답은 구글시트로 전송되지 않습니다.)</p>
     <div class="oxcheck">
-      <div class="oxitem"><p class="oxq">1. 광합성에는 빛, 물, 이산화탄소가 필요하다.</p><span class="oxchoice">O 맞다</span><span class="oxchoice">X 아니다</span><details><summary>정답과 이유 보기</summary><p class="answer">정답: O — 빛은 에너지원이고, 물과 이산화탄소는 포도당을 만드는 재료입니다.</p></details></div>
-      <div class="oxitem"><p class="oxq">2. 식물은 밤에는 호흡을 하지 않는다.</p><span class="oxchoice">O 맞다</span><span class="oxchoice">X 아니다</span><details><summary>정답과 이유 보기</summary><p class="answer">정답: X — 식물도 살아가기 위해 밤낮 계속 호흡합니다.</p></details></div>
-      <div class="oxitem"><p class="oxq">3. 광합성으로 만들어지는 산소는 식물이 밖으로 내보낼 수 있다.</p><span class="oxchoice">O 맞다</span><span class="oxchoice">X 아니다</span><details><summary>정답과 이유 보기</summary><p class="answer">정답: O — 물풀 실험에서 보이는 산소 방울처럼, 광합성 결과 산소가 만들어져 나올 수 있습니다.</p></details></div>
-      <div class="oxitem"><p class="oxq">4. AI가 잎 사진만 보고 "건강하다"고 말하면 항상 맞다고 볼 수 있다.</p><span class="oxchoice">O 맞다</span><span class="oxchoice">X 아니다</span><details><summary>정답과 이유 보기</summary><p class="answer">정답: X — 사진의 색과 모양만으로는 물, 빛, 병충해, 토양 상태를 모두 알기 어렵기 때문에 교과 지식과 추가 관찰로 확인해야 합니다.</p></details></div>
+      <div class="oxitem" data-answer="O"><p class="oxq">1. 광합성에는 빛, 물, 이산화탄소가 필요하다.</p><button type="button" class="oxchoice" data-v="O">O 맞다</button><button type="button" class="oxchoice" data-v="X">X 아니다</button><p class="oxfb" hidden></p><p class="answer" hidden>정답: O — 빛은 에너지원이고, 물과 이산화탄소는 포도당을 만드는 재료입니다.</p></div>
+      <div class="oxitem" data-answer="X"><p class="oxq">2. 식물은 밤에는 호흡을 하지 않는다.</p><button type="button" class="oxchoice" data-v="O">O 맞다</button><button type="button" class="oxchoice" data-v="X">X 아니다</button><p class="oxfb" hidden></p><p class="answer" hidden>정답: X — 식물도 살아가기 위해 밤낮 계속 호흡합니다.</p></div>
+      <div class="oxitem" data-answer="O"><p class="oxq">3. 광합성으로 만들어지는 산소는 식물이 밖으로 내보낼 수 있다.</p><button type="button" class="oxchoice" data-v="O">O 맞다</button><button type="button" class="oxchoice" data-v="X">X 아니다</button><p class="oxfb" hidden></p><p class="answer" hidden>정답: O — 물풀 실험에서 보이는 산소 방울처럼, 광합성 결과 산소가 만들어져 나올 수 있습니다.</p></div>
+      <div class="oxitem" data-answer="X"><p class="oxq">4. AI가 잎 사진만 보고 "건강하다"고 말하면 항상 맞다고 볼 수 있다.</p><button type="button" class="oxchoice" data-v="O">O 맞다</button><button type="button" class="oxchoice" data-v="X">X 아니다</button><p class="oxfb" hidden></p><p class="answer" hidden>정답: X — 사진의 색과 모양만으로는 물, 빛, 병충해, 토양 상태를 모두 알기 어렵기 때문에 교과 지식과 추가 관찰로 확인해야 합니다.</p></div>
     </div>
   </section>
 
@@ -215,6 +220,23 @@
       if(ok){ done(); }
       else{ fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',body:body}).then(done).catch(function(){
         s.className='formstatus err'; s.textContent='⚠️ 전송에 실패했어요. 인터넷을 확인하고 다시 제출해 주세요.'; }); }
+    });
+
+    // 개념 확인 OX — 클릭 시 즉시 정답/오답 표시 (구글시트 전송과 무관)
+    document.querySelectorAll('.oxitem').forEach(function(item){
+      var ans = item.getAttribute('data-answer');
+      var fb = item.querySelector('.oxfb');
+      var reason = item.querySelector('.answer');
+      if(reason) reason.hidden = true;
+      item.querySelectorAll('.oxchoice').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          item.querySelectorAll('.oxchoice').forEach(function(b){ b.classList.remove('correct','wrong'); });
+          var ok = (btn.getAttribute('data-v') === ans);
+          btn.classList.add(ok ? 'correct' : 'wrong');
+          if(fb){ fb.textContent = ok ? '✅ 정답이에요!' : '❌ 다시 생각해 볼까요?'; fb.className = 'oxfb ' + (ok ? 'ok' : 'err'); fb.hidden = false; }
+          if(reason) reason.hidden = false;
+        });
+      });
     });
   })();
 </script>
