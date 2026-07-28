@@ -29,6 +29,10 @@
   .hero h1{margin:0 0 8px;font-size:27px;letter-spacing:-.6px}
   .hero p{margin:0;opacity:.96;font-size:15px}
   .hero .sub{margin-top:14px;font-size:13.5px;opacity:.9}
+  .hero .addr{display:inline-block;margin:0 0 10px;padding:6px 14px;border-radius:999px;
+    background:rgba(255,255,255,.18);font-size:14.5px;line-height:1.5}
+  .hero .addr b{font-size:16px;letter-spacing:.2px}
+  @media (max-width:600px){ .hero .addr{font-size:13px;padding:6px 12px} .hero .addr b{font-size:14px} }
 
   section{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
     padding:22px;margin-top:20px;box-shadow:var(--shadow)}
@@ -123,6 +127,7 @@
 
 <header class="hero" id="top">
   <h1>🚀 교육용 앱 만들고 배포 관리하기</h1>
+  <div class="addr">이 사이트의 주소는 <b>https://숏.한국/구짱/0729/</b> 입니다.</div>
   <p>내 교과 수업 코스웨어를 만들어 인터넷에 배포하고, 학생 응답을 자동으로 받습니다</p>
   <div class="sub">AIEDAP 호남권역 일반교원 AI디지털 융합수업 역량강화 연수<br>2026. 7. 29.(수) 09:00~13:00 · 대성여자고등학교 AI팩토리실</div>
 </header>
