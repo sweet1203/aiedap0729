@@ -131,9 +131,10 @@
   <div class="inner">
     <a href="#down">📥 자료받기</a>
     <a href="#flow">오늘의 흐름</a>
+    <a href="flow.html">🗺️ 전체그림</a>
     <a href="#s1">1 교과뽑기</a>
-    <a href="#s2">2 코스웨어</a>
-    <a href="#s3">3 시트연결</a>
+    <a href="#s2">2 시트연결</a>
+    <a href="#s3">3 코스웨어</a>
     <a href="#s4">4 배포</a>
     <a href="#s5">5 확인</a>
     <a href="#s6">6 산출물</a>
@@ -191,9 +192,9 @@
       <div class="tl-item" style="opacity:.75"><div class="tl-time">08:50</div><div class="tl-body"><b>도착 · 계정 점검</b>GitHub·Vercel 로그인이 되는지만 미리 확인합니다.</div></div>
       <div class="tl-item"><div class="tl-time">09:00–09:20</div><div class="tl-body"><b>시작 · 완성 데모</b>오늘 만들 것을 먼저 봅니다. 개념 3가지(웹앱·배포·수집)를 짧게.</div></div>
       <div class="tl-item"><div class="tl-time">09:20–09:50</div><div class="tl-body"><b>1단계 · NotebookLM으로 내 교과 뽑기</b>내 교과서·자료에서 핵심 개념 요약을 만듭니다.</div></div>
-      <div class="tl-item"><div class="tl-time">09:50–10:35</div><div class="tl-body"><b>2단계 · AI로 코스웨어 만들기</b>템플릿의 ✏️ 자리를 내 교과 내용으로 채웁니다.</div></div>
-      <div class="tl-item"><div class="tl-time">10:35–10:45</div><div class="tl-body"><b>☕ 휴식 10분</b></div></div>
-      <div class="tl-item" style="background:#fff9db;border-radius:8px"><div class="tl-time">10:45–11:35</div><div class="tl-body"><b>3단계 · 구글시트 연결 ⚠️ 오늘의 승부처</b>학생 답이 자동으로 모이도록 연결합니다. 다 같이 천천히 갑니다.</div></div>
+      <div class="tl-item" style="background:#fff9db;border-radius:8px"><div class="tl-time">09:50–10:40</div><div class="tl-body"><b>2단계 · 구글시트 연결 ⚠️ 오늘의 승부처</b>학생 답이 모일 시트를 만들고 <b>/exec 주소</b>를 받습니다. 다 같이 천천히 갑니다.</div></div>
+      <div class="tl-item"><div class="tl-time">10:40–10:50</div><div class="tl-body"><b>☕ 휴식 10분</b></div></div>
+      <div class="tl-item"><div class="tl-time">10:50–11:35</div><div class="tl-body"><b>3단계 · AI로 코스웨어 만들기</b>교과 요약 + /exec 주소 + 템플릿을 AI에게 한 번에 주면 완성본이 나옵니다.</div></div>
       <div class="tl-item"><div class="tl-time">11:35–12:00</div><div class="tl-body"><b>4단계 · 인터넷에 올리기</b>GitHub에 올리고 Vercel로 배포 → 내 주소(URL)가 생깁니다.</div></div>
       <div class="tl-item" style="background:#ebfbee;border-radius:8px"><div class="tl-time">12:00–12:15</div><div class="tl-body"><b>5단계 · 연결 확인 🎉 완주 지점</b>폰으로 열어 제출 → 시트에 쌓이는지 확인. <b>여기까지 오면 성공입니다.</b></div></div>
       <div class="tl-item"><div class="tl-time">12:15–12:40</div><div class="tl-body"><b>6단계 · 수업지도안 초안</b>산출물 도우미로 지도안을 채웁니다. (나머지는 집에서 마무리 가능)</div></div>
@@ -218,7 +219,7 @@
         <li><span class="path">notebooklm.google.com</span> 접속 (구글 계정으로 바로 열립니다)</li>
         <li><b>새로 만들기</b> → 내 <b>교과서 PDF·수업자료</b>를 업로드</li>
         <li>업로드가 끝나면 아래 <b>프롬프트를 복사해</b> 채팅창에 붙여넣기</li>
-        <li>나온 답변을 <b>드래그해서 복사</b> (<span class="kbd">Ctrl</span>+<span class="kbd">C</span>) — 2단계에서 씁니다</li>
+        <li>나온 답변을 <b>드래그해서 복사</b> (<span class="kbd">Ctrl</span>+<span class="kbd">C</span>) — 메모장에 붙여넣어 두세요, <b>3단계</b>에서 씁니다</li>
       </ol>
     </div>
 
@@ -257,18 +258,86 @@
     </div>
   </section>
 
-  <!-- 2단계 -->
+  <!-- 2단계 · 구글시트 -->
   <section id="s2">
-    <h2><span class="n">2</span> AI로 코스웨어 만들기</h2>
-    <p class="lead">09:50–10:35 · 템플릿의 ✏️ 자리를 내 교과 내용으로 채웁니다.</p>
+    <h2><span class="n">2</span> 구글시트 연결하기 ⚠️</h2>
+    <p class="lead">09:50–10:40 · <b>오늘 가장 까다로운 단계</b>를 머리가 맑을 때 먼저 끝냅니다. 강사와 함께 천천히 진행합니다. 여기서 받는 <b>/exec 주소</b>를 3단계 AI 프롬프트에 넣으면, AI가 코스웨어에 알아서 연결해 줍니다.</p>
 
     <div class="step">
-      <h3 style="margin-top:0">먼저 템플릿을 준비하세요</h3>
+      <h3 style="margin-top:0">⓪ 준비 — 템플릿 ZIP 받기</h3>
       <ol class="click">
         <li>드라이브에서 <b>01_코스웨어_템플릿.zip</b> 다운로드</li>
         <li>다운로드 폴더에서 <b>압축 풀기</b> → <code>수업_템플릿.html</code>, <code>Code_복사용.txt</code> 두 개</li>
         <li>바탕화면에 <b>내 이름 폴더</b>를 만들어 옮기기 (예: <code>김다비_코스웨어</code>)</li>
-        <li><code>수업_템플릿.html</code>을 <b>메모장</b>이나 <b>텍스트 편집기</b>로 열기<br>
+      </ol>
+    </div>
+
+    <div class="note danger">
+      🚨 이 단계에서 <b>"안전하지 않음" 경고 화면</b>이 나옵니다. <b>정상입니다.</b> 내가 직접 만든 스크립트라서 구글이 습관적으로 띄우는 경고예요. 아래 순서대로 진행하세요.
+    </div>
+
+    <div class="step">
+      <h3 style="margin-top:0">① 구글시트와 스크립트 만들기</h3>
+      <ol class="click">
+        <li><span class="path">drive.google.com</span> → <b>새로 만들기</b> → <b>Google 스프레드시트</b></li>
+        <li>제목을 정하기 (예: <code>과학 수업응답</code>)</li>
+        <li>메뉴 <span class="path">확장 프로그램 → Apps Script</span> 클릭</li>
+        <li>기본으로 있는 코드를 <b>전체 선택</b>(<span class="kbd">Ctrl</span>+<span class="kbd">A</span>) 후 <b>삭제</b></li>
+        <li><b>방금 압축 푼 <code>Code_복사용.txt</code></b>를 메모장으로 열어 전체 복사 → 여기에 붙여넣기</li>
+        <li><b>저장</b> (💾 아이콘 또는 <span class="kbd">Ctrl</span>+<span class="kbd">S</span>)</li>
+      </ol>
+      <div class="note warn">⚠️ <b>01번 ZIP 안의 Code_복사용.txt를 구글 문서로 열지 마세요.</b> 따옴표가 자동으로 바뀌어 코드가 깨집니다. 압축을 푼 뒤 <b>메모장/텍스트 편집기에서 바로 복사</b>하세요.</div>
+    </div>
+
+    <div class="step">
+      <h3 style="margin-top:0">② 권한 승인 (놀라지 마세요)</h3>
+      <ol class="click">
+        <li>상단 함수 목록에서 <b>setup</b> 선택 → <b>▶ 실행</b></li>
+        <li><b>권한 검토</b> 창 → 내 구글 계정 선택</li>
+        <li>⚠️ <b>"Google에서 확인하지 않은 앱"</b> 경고가 뜹니다 → <b>고급</b> 클릭</li>
+        <li>맨 아래 <b>"(안전하지 않음)으로 이동"</b> 클릭</li>
+        <li><b>허용</b> 클릭</li>
+        <li>시트에 <b>응답</b> 탭이 생기면 성공 ✅</li>
+      </ol>
+    </div>
+
+    <div class="step">
+      <h3 style="margin-top:0">③ 웹 앱으로 배포하고 주소 받기</h3>
+      <ol class="click">
+        <li>오른쪽 위 <b>배포</b> → <b>새 배포</b></li>
+        <li>왼쪽 톱니바퀴 <b>⚙️</b> → <b>웹 앱</b> 선택</li>
+        <li><b>실행 사용자: 나</b></li>
+        <li><b>액세스 권한: 링크가 있는 모든 사용자</b> ← 꼭 이걸로!</li>
+        <li><b>배포</b> 클릭 → 권한 승인</li>
+        <li><b>웹 앱 URL 복사</b> — 주소가 <code>/exec</code>로 끝나는지 확인!</li>
+      </ol>
+      <div class="note ok">✅ 복사한 주소 예시: <code>https://script.google.com/macros/s/AKfy...../exec</code></div>
+      <div class="note danger">🚨 <code>/dev</code>로 끝나면 <b>안 됩니다.</b> 반드시 <code>/exec</code>여야 학생 응답이 들어옵니다.</div>
+    </div>
+
+    <div class="step">
+      <h3 style="margin-top:0">④ /exec 주소 잘 보관하기</h3>
+      <ol class="click">
+        <li>복사한 <b>/exec 주소를 메모장에 붙여넣어</b> 두기 (1단계 교과 요약을 붙여둔 메모장이면 더 좋아요)</li>
+        <li>이 주소는 <b>3단계 AI 프롬프트</b>에 붙여넣습니다 — AI가 코스웨어에 알아서 넣어 줍니다</li>
+      </ol>
+      <div class="note ok">✅ 여기까지 되면 오늘의 승부처 통과! 이제 어려운 건 없습니다.</div>
+    </div>
+
+    <div class="note warn">
+      🆘 <b>여기서 막히면 손드세요.</b> 강사가 미리 만들어 둔 시트를 대신 드립니다. 그 <b>/exec 주소를 받아 3단계 프롬프트에 그대로 쓰면</b> 됩니다. <b>아무도 여기서 멈추지 않습니다.</b>
+    </div>
+  </section>
+
+  <!-- 3단계 · 코스웨어 -->
+  <section id="s3">
+    <h2><span class="n">3</span> AI로 코스웨어 만들기</h2>
+    <p class="lead">10:50–11:35 · <b>재료 3가지</b>(① 교과 요약 ② /exec 주소 ③ 템플릿)를 AI에게 한 번에 주면, 완성된 코스웨어가 나옵니다.</p>
+
+    <div class="step">
+      <h3 style="margin-top:0">먼저 템플릿을 준비하세요</h3>
+      <ol class="click">
+        <li><b>2단계에서 압축 푼 <code>수업_템플릿.html</code></b>을 <b>메모장</b>이나 <b>텍스트 편집기</b>로 열기<br>
             <span style="color:var(--muted);font-size:13.5px">윈도우: 파일 우클릭 → 연결 프로그램 → 메모장 / 맥: 우클릭 → 다음으로 열기 → 텍스트 편집기</span></li>
         <li><span class="kbd">Ctrl</span>+<span class="kbd">A</span> 전체 선택 → <span class="kbd">Ctrl</span>+<span class="kbd">C</span> 복사</li>
       </ol>
@@ -280,7 +349,7 @@
 
 ★★ 절대 바꾸면 안 되는 것 (어기면 코스웨어가 깨집니다) ★★
 1. 맨 아래 '오늘의 정리 질문'의 <form> 전체 — 한 글자도 바꾸지 말 것.
-2. 맨 아래 <script> 전체 — 한 글자도 바꾸지 말 것. (SCRIPT_URL·붙여넣기 차단·OX 자동채점 코드가 들어 있음)
+2. 맨 아래 <script> 전체 — 딱 한 곳만 바꿀 것: SCRIPT_URL = "PASTE_WEBAPP_URL" 에서 PASTE_WEBAPP_URL 만 아래 [내 웹앱 주소]로 교체. 그 외에는 한 글자도 바꾸지 말 것. (붙여넣기 차단·OX 자동채점 코드가 들어 있음)
 3. <style>(CSS) 전체 — 그대로 둘 것. 새 클래스·색·구조 추가 금지. 아래 제공된 클래스만 사용:
    .goal .lead .concept .eq .example .mis .oxcheck .oxitem .oxchoice .oxfb .answer .steps .tip
 4. 반드시 단일 HTML 파일 하나로만. React·Tailwind·여러 파일·빌드 설정·외부 링크(CDN) 금지.
@@ -301,11 +370,14 @@
 · ✏️ 표시는 모두 실제 내용으로 바꾸고, 하나도 남기지 말 것.
 
 [완성 후 스스로 확인]
-① <form>과 <script>가 원본과 똑같은가   ② 모든 oxitem에 data-answer(O/X)가 있는가
-③ 파일이 HTML 하나인가   ④ ✏️ 가 남아있지 않은가
+① <form>과 <script>가 원본과 똑같은가 (SCRIPT_URL 한 곳 제외)   ② SCRIPT_URL에 /exec로 끝나는 내 주소가 들어갔는가
+③ 모든 oxitem에 data-answer(O/X)가 있는가   ④ 파일이 HTML 하나인가   ⑤ ✏️ 가 남아있지 않은가
 
 [내 수업 정보]
 - 교과 / 학년 / 단원 / 주제:
+
+[내 웹앱 주소]
+(여기에 2단계에서 받은 /exec 주소를 붙여넣기)
 
 [학습 내용]
 (여기에 1단계에서 복사한 NotebookLM 요약을 붙여넣기)
@@ -350,71 +422,10 @@ Q3은 반드시 이 수업의 교과 내용과 자연스럽게 연결되게 하�
         <li>메모장에 붙여넣고 <b>다른 이름으로 저장</b></li>
         <li>파일 이름: <code>index.html</code> · 파일 형식: <b>모든 파일</b> · 인코딩: <b>UTF-8</b> <span style="color:var(--muted);font-size:13px">(index.html로 저장해야 배포 주소에서 바로 열립니다)</span></li>
         <li>저장한 파일을 <b>더블클릭</b> → 브라우저에서 내 코스웨어가 열립니다 🎉</li>
+        <li>메모장에서 <span class="kbd">Ctrl</span>+<span class="kbd">F</span>로 <code>PASTE_WEBAPP_URL</code> 검색 → <b>안 나와야 정상</b>입니다<br>
+            <span style="color:var(--muted);font-size:13.5px">나온다면 AI가 주소를 안 넣은 것 → 그 부분을 2단계에서 받은 /exec 주소로 직접 바꾸고 저장</span></li>
       </ol>
       <div class="note warn">⚠️ 저장할 때 <b>인코딩을 UTF-8</b>로 하지 않으면 한글이 깨집니다.</div>
-    </div>
-  </section>
-
-  <!-- 3단계 -->
-  <section id="s3">
-    <h2><span class="n">3</span> 구글시트 연결하기 ⚠️</h2>
-    <p class="lead">10:45–11:35 · <b>오늘 가장 까다로운 단계입니다.</b> 강사와 함께 천천히 진행합니다.</p>
-
-    <div class="note danger">
-      🚨 이 단계에서 <b>"안전하지 않음" 경고 화면</b>이 나옵니다. <b>정상입니다.</b> 내가 직접 만든 스크립트라서 구글이 습관적으로 띄우는 경고예요. 아래 순서대로 진행하세요.
-    </div>
-
-    <div class="step">
-      <h3 style="margin-top:0">① 구글시트와 스크립트 만들기</h3>
-      <ol class="click">
-        <li><span class="path">drive.google.com</span> → <b>새로 만들기</b> → <b>Google 스프레드시트</b></li>
-        <li>제목을 정하기 (예: <code>과학 수업응답</code>)</li>
-        <li>메뉴 <span class="path">확장 프로그램 → Apps Script</span> 클릭</li>
-        <li>기본으로 있는 코드를 <b>전체 선택</b>(<span class="kbd">Ctrl</span>+<span class="kbd">A</span>) 후 <b>삭제</b></li>
-        <li><b>1단계에서 압축 푼 <code>Code_복사용.txt</code></b>를 메모장으로 열어 전체 복사 → 여기에 붙여넣기</li>
-        <li><b>저장</b> (💾 아이콘 또는 <span class="kbd">Ctrl</span>+<span class="kbd">S</span>)</li>
-      </ol>
-      <div class="note warn">⚠️ <b>01번 ZIP 안의 Code_복사용.txt를 구글 문서로 열지 마세요.</b> 따옴표가 자동으로 바뀌어 코드가 깨집니다. 압축을 푼 뒤 <b>메모장/텍스트 편집기에서 바로 복사</b>하세요.</div>
-    </div>
-
-    <div class="step">
-      <h3 style="margin-top:0">② 권한 승인 (놀라지 마세요)</h3>
-      <ol class="click">
-        <li>상단 함수 목록에서 <b>setup</b> 선택 → <b>▶ 실행</b></li>
-        <li><b>권한 검토</b> 창 → 내 구글 계정 선택</li>
-        <li>⚠️ <b>"Google에서 확인하지 않은 앱"</b> 경고가 뜹니다 → <b>고급</b> 클릭</li>
-        <li>맨 아래 <b>"(안전하지 않음)으로 이동"</b> 클릭</li>
-        <li><b>허용</b> 클릭</li>
-        <li>시트에 <b>응답</b> 탭이 생기면 성공 ✅</li>
-      </ol>
-    </div>
-
-    <div class="step">
-      <h3 style="margin-top:0">③ 웹 앱으로 배포하고 주소 받기</h3>
-      <ol class="click">
-        <li>오른쪽 위 <b>배포</b> → <b>새 배포</b></li>
-        <li>왼쪽 톱니바퀴 <b>⚙️</b> → <b>웹 앱</b> 선택</li>
-        <li><b>실행 사용자: 나</b></li>
-        <li><b>액세스 권한: 링크가 있는 모든 사용자</b> ← 꼭 이걸로!</li>
-        <li><b>배포</b> 클릭 → 권한 승인</li>
-        <li><b>웹 앱 URL 복사</b> — 주소가 <code>/exec</code>로 끝나는지 확인!</li>
-      </ol>
-      <div class="note ok">✅ 복사한 주소 예시: <code>https://script.google.com/macros/s/AKfy...../exec</code></div>
-      <div class="note danger">🚨 <code>/dev</code>로 끝나면 <b>안 됩니다.</b> 반드시 <code>/exec</code>여야 학생 응답이 들어옵니다.</div>
-    </div>
-
-    <div class="step">
-      <h3 style="margin-top:0">④ 주소를 내 코스웨어에 넣기</h3>
-      <ol class="click">
-        <li><code>index.html</code>(내가 저장한 코스웨어)을 메모장으로 열기</li>
-        <li><span class="kbd">Ctrl</span>+<span class="kbd">F</span>로 <code>PASTE_WEBAPP_URL</code> 찾기</li>
-        <li>그 부분을 <b>복사한 /exec 주소로 교체</b> (따옴표 <code>"</code>는 그대로 두기)</li>
-        <li>저장</li>
-      </ol>
-    </div>
-
-    <div class="note warn">
-      🆘 <b>여기서 막히면 손드세요.</b> 강사가 미리 만들어 둔 시트를 대신 드립니다. 그 주소를 받아서 <b>④번부터</b> 이어가면 됩니다. <b>아무도 여기서 멈추지 않습니다.</b>
     </div>
   </section>
 
@@ -467,13 +478,12 @@ Q3은 반드시 이 수업의 교과 내용과 자연스럽게 연결되게 하�
     <h3>✅ 여기까지 체크</h3>
     <div class="chk" id="chk">
       <label><input type="checkbox" data-k="c1"><span>NotebookLM으로 교과 요약을 뽑았다</span></label>
-      <label><input type="checkbox" data-k="c2"><span>AI로 코스웨어 HTML을 만들어 저장했다</span></label>
-      <label><input type="checkbox" data-k="c3"><span>더블클릭해서 브라우저에 잘 열린다</span></label>
-      <label><input type="checkbox" data-k="c4"><span>구글시트 + Apps Script 배포를 마치고 /exec 주소를 받았다</span></label>
-      <label><input type="checkbox" data-k="c5"><span>주소를 코스웨어에 넣고 저장했다</span></label>
-      <label><input type="checkbox" data-k="c6"><span>GitHub에 올리고 Vercel로 배포해 URL을 받았다</span></label>
-      <label><input type="checkbox" data-k="c7"><span>폰으로 제출했더니 시트에 줄이 생겼다 🎉</span></label>
-      <label><input type="checkbox" data-k="c8"><span>패들렛 공유보드에 내 코스웨어 주소를 올렸다</span></label>
+      <label><input type="checkbox" data-k="c2"><span>구글시트 + Apps Script 배포를 마치고 /exec 주소를 받았다</span></label>
+      <label><input type="checkbox" data-k="c3"><span>AI로 코스웨어를 만들어 index.html로 저장했다 (/exec 주소 포함)</span></label>
+      <label><input type="checkbox" data-k="c4"><span>더블클릭해서 브라우저에 잘 열린다 (PASTE_WEBAPP_URL 검색해도 안 나온다)</span></label>
+      <label><input type="checkbox" data-k="c5"><span>GitHub에 올리고 Vercel로 배포해 URL을 받았다</span></label>
+      <label><input type="checkbox" data-k="c6"><span>폰으로 제출했더니 시트에 줄이 생겼다 🎉</span></label>
+      <label><input type="checkbox" data-k="c7"><span>패들렛 공유보드에 내 코스웨어 주소를 올렸다</span></label>
     </div>
 
     <div class="dl" style="background:linear-gradient(135deg,#fff0f6,#ffdeeb);border-color:#faa2c1;margin-top:18px">
@@ -608,7 +618,8 @@ Q3은 반드시 이 수업의 교과 내용과 자연스럽게 연결되게 하�
 
     <details>
       <summary>"⚠️ 아직 제출 주소가 설정되지 않았어요"가 떠요</summary>
-      <p>코스웨어 안의 <code>PASTE_WEBAPP_URL</code>을 <b>실제 /exec 주소로 바꾸지 않았거나</b>, 바꾼 뒤 <b>저장을 안 한</b> 상태입니다. 3단계 ④번을 다시 확인하세요.</p>
+      <p>코스웨어 안의 <code>PASTE_WEBAPP_URL</code>이 <b>실제 /exec 주소로 바뀌지 않은</b> 상태입니다. AI 프롬프트의 <b>[내 웹앱 주소]</b> 칸을 빠뜨렸을 가능성이 큽니다.<br>
+      → <code>index.html</code>을 메모장으로 열어 <span class="kbd">Ctrl</span>+<span class="kbd">F</span>로 <code>PASTE_WEBAPP_URL</code>을 찾아, 2단계에서 받은 <b>/exec 주소로 직접 교체</b>하고 저장하세요.</p>
     </details>
 
     <details>
