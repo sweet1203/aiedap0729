@@ -254,19 +254,33 @@
 
     <div class="pbox">
       <div class="phead"><h4>💬 프롬프트 ② — 코스웨어 채우기 <b style="color:var(--danger)">★ 가장 중요</b></h4><button class="btn ghost" onclick="cp('p2', this)">복사</button></div>
-      <textarea class="p" spellcheck="false" id="p2">아래 HTML 템플릿의 '수업 내용 영역'을 내 교과 내용으로 풍부하게 채워, 완성된 HTML 한 개로 돌려줘.
+      <textarea class="p" spellcheck="false" id="p2">아래 HTML 템플릿의 '수업 내용 영역'만 내 교과 내용으로 풍부하게 채워, 완성된 HTML 한 개로 돌려줘.
 
-[꼭 지킬 것]
-1. 맨 아래 '오늘의 정리 질문' <form> 과 <script>(SCRIPT_URL·OX 채점 코드 포함)는 한 글자도 바꾸지 마세요.
-2. <style>(CSS)는 그대로 두고, 제공된 클래스만 활용하세요: .goal .lead .concept .eq .example .mis .oxcheck .oxitem .steps .tip
-3. 수업 내용 영역(1 오늘 배우는 것 ~ 5 해보기)을 수업자료처럼 넉넉하게 채워 주세요:
-   - 1 학습목표: 교과 / 인공지능 / 교과+AI 융합 3분할
-   - 2 왜 배울까: 실생활 상황 질문 + 도입 예시 + 사전 확인
-   - 3 핵심 개념: .concept 블록을 개념 수만큼 여러 개(2~4개). 각 블록은 뜻, 왜 중요한지, 예시(.example), 헷갈리기 쉬운 점(.mis)을 포함
-   - 4 개념 확인 OX: 쉬운 OX 문항 3~4개. 각 문항 &lt;div class="oxitem"&gt;에 data-answer="O" 또는 "X"(정답)를 넣고, .answer에 이유를 쓰기. (클릭하면 자동 채점 — 구글시트로 수집 안 됨)
-   - 5 해보기: .steps 목록으로 학생이 실제로 하는 단계 3~5개 + 학생이 적을 말 예시 + .tip
-4. 반드시 단일 HTML 파일 하나로만. (React·여러 파일·빌드 설정 금지)
-5. 내가 준 학습 내용에 근거해 쓰고, 사실을 지어내지 마세요.
+★★ 절대 바꾸면 안 되는 것 (어기면 코스웨어가 깨집니다) ★★
+1. 맨 아래 '오늘의 정리 질문'의 <form> 전체 — 한 글자도 바꾸지 말 것.
+2. 맨 아래 <script> 전체 — 한 글자도 바꾸지 말 것. (SCRIPT_URL·붙여넣기 차단·OX 자동채점 코드가 들어 있음)
+3. <style>(CSS) 전체 — 그대로 둘 것. 새 클래스·색·구조 추가 금지. 아래 제공된 클래스만 사용:
+   .goal .lead .concept .eq .example .mis .oxcheck .oxitem .oxchoice .oxfb .answer .steps .tip
+4. 반드시 단일 HTML 파일 하나로만. React·Tailwind·여러 파일·빌드 설정·외부 링크(CDN) 금지.
+
+[채울 곳: 수업 내용 영역 = 1 오늘 배우는 것 ~ 5 해보기]
+- 1 학습목표: 교과 / 인공지능 / 교과+AI 융합 3분할, 각 "~할 수 있다" 형태.
+- 2 왜 배울까: 실생활 상황 질문(.lead) + 도입 예시(.example) + 사전 확인(.tip).
+- 3 핵심 개념: .concept 블록을 개념 수만큼(2~4개). 각 블록에 뜻·왜 중요한지, 예시(.example), 헷갈리기 쉬운 점(.mis). 공식·핵심 문장은 .eq로 강조.
+- 4 개념 확인 OX: 문항 3~4개. ★ 각 문항은 아래 구조를 반드시 지킬 것:
+    · 문항 블록 div class="oxitem" 에 data-answer="O" 또는 "X"(정답)를 꼭 넣기
+    · O/X 버튼 두 개(button class="oxchoice" data-v="O" / data-v="X")와 빈 p class="oxfb"는 그대로 유지
+    · 이유는 p class="answer" 에 쓰기
+    (data-answer가 없거나 버튼을 지우면 자동 채점이 작동하지 않습니다.)
+- 5 해보기: .steps 목록으로 학생이 실제로 하는 단계 3~5개 + .tip.
+
+[원칙]
+· 내가 준 학습 내용에 근거해 쓰고, 없는 사실을 지어내지 말 것.
+· ✏️ 표시는 모두 실제 내용으로 바꾸고, 하나도 남기지 말 것.
+
+[완성 후 스스로 확인]
+① <form>과 <script>가 원본과 똑같은가   ② 모든 oxitem에 data-answer(O/X)가 있는가
+③ 파일이 HTML 하나인가   ④ ✏️ 가 남아있지 않은가
 
 [내 수업 정보]
 - 교과 / 학년 / 단원 / 주제:
