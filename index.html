@@ -82,6 +82,7 @@
   textarea.p{display:block;width:100%;resize:vertical;min-height:90px;color:var(--ink)}
   textarea.p:focus{outline:2px solid var(--accent-2);border-color:transparent}
   .editnote{font-size:12.5px;color:var(--muted);margin:6px 0 0}
+  .mobhint{display:none}
   .btn{background:var(--accent);color:#fff;border:none;font-weight:800;font-size:13px;
     padding:7px 14px;border-radius:8px;cursor:pointer}
   .btn:hover{filter:brightness(1.1)}
@@ -119,6 +120,10 @@
     nav .inner{flex-wrap:wrap;overflow-x:visible;gap:4px;padding:0 10px}
     nav a{font-size:12px;padding:5px 8px}
     section{padding:18px 16px}
+    /* 프롬프트 상자: 줄간격 좁히고 높이 제한(안에서 스크롤) */
+    textarea.p{font-size:13px;line-height:1.5;padding:12px;max-height:46vh;overflow-y:auto}
+    .editnote{margin-top:4px}
+    .mobhint{display:block;font-size:12.5px;color:var(--muted);margin:6px 0 0}
   }
   @media print{ nav,.toplink,.btn,.dlbtn{display:none} section{break-inside:avoid;box-shadow:none} }
 </style>
@@ -217,11 +222,15 @@
   <!-- 1단계 -->
   <section id="s1">
     <h2><span class="n">1</span> NotebookLM으로 내 교과 뽑기</h2>
-    <p class="lead">09:20–09:50 · 내 교과서·수업자료에서 학생 눈높이 요약을 만듭니다.</p>
+    <p class="lead">내 교과서·수업자료에서 학생 눈높이 요약을 만듭니다.</p>
+
+    <div class="note info">
+      📚 <b>교과 자료 준비가 안 되신 분</b> → <a href="https://drive.google.com/drive/folders/12Z5KvDON74Hzyqj51t7Qa0Jxpdo7kK84?usp=sharing" target="_blank" rel="noopener" style="color:var(--accent);font-weight:800">여기를 클릭해 자료 받기 →</a>
+    </div>
 
     <div class="step">
       <ol class="click">
-        <li><span class="path">notebooklm.google.com</span> 접속 (구글 계정으로 바로 열립니다)</li>
+        <li><a href="https://notebooklm.google.com" target="_blank" rel="noopener" class="path" style="color:var(--accent);text-decoration:none">notebooklm.google.com</a> 접속 <span style="color:var(--muted);font-size:13.5px">(클릭하면 새 창에서 열립니다 · 구글 계정으로 바로 사용)</span></li>
         <li><b>새로 만들기</b> → 내 <b>교과서 PDF·수업자료</b>를 업로드</li>
         <li>업로드가 끝나면 아래 <b>프롬프트를 복사해</b> 채팅창에 붙여넣기</li>
         <li>나온 답변을 <b>드래그해서 복사</b> (<span class="kbd">Ctrl</span>+<span class="kbd">C</span>) — 메모장에 붙여넣어 두세요, <b>3단계</b>에서 씁니다</li>
@@ -255,6 +264,7 @@
 9) 이 단원을 한 문장으로 요약
 
 교과서·업로드한 자료에 있는 내용만 사용하고, 없는 내용은 지어내지 마. 근거가 되는 부분(쪽·소단원)이 있으면 함께 알려줘.</textarea>
+      <div class="mobhint">↕ 상자 안에서 스크롤하면 전체 내용이 보입니다 · <b>복사</b> 버튼은 전체를 복사합니다</div>
       <div class="note info">💡 <b>학년을 본인 학년으로 바꿔서</b> 쓰세요. 초등이면 "초등학교 5학년", 고등이면 "고등학교 1학년".</div>
     </div>
   </section>
@@ -262,7 +272,7 @@
   <!-- 2단계 · 구글시트 -->
   <section id="s2">
     <h2><span class="n">2</span> 구글시트 연결하기 ⚠️</h2>
-    <p class="lead">09:50–10:40 · 여기서 받는 <b>/exec 주소</b>를 3단계 AI 프롬프트에 넣으면, AI가 코스웨어에 알아서 연결해 줍니다.</p>
+    <p class="lead">여기서 받는 <b>/exec 주소</b>를 3단계 AI 프롬프트에 넣으면, AI가 코스웨어에 알아서 연결해 줍니다.</p>
 
     <div class="step">
       <h3 style="margin-top:0">⓪ 준비 — 템플릿 ZIP 받기</h3>
@@ -324,16 +334,12 @@
       </ol>
       <div class="note ok">✅ 여기까지 되면 오늘의 승부처 통과! 이제 어려운 건 없습니다.</div>
     </div>
-
-    <div class="note warn">
-      🆘 <b>여기서 막히면 손드세요.</b> 강사가 미리 만들어 둔 시트를 대신 드립니다. 그 <b>/exec 주소를 받아 3단계 프롬프트에 그대로 쓰면</b> 됩니다.
-    </div>
   </section>
 
   <!-- 3단계 · 코스웨어 -->
   <section id="s3">
     <h2><span class="n">3</span> AI로 코스웨어 만들기</h2>
-    <p class="lead">10:50–11:35 · <b>재료 3가지</b>(① 교과 요약 ② /exec 주소 ③ 템플릿)를 AI에게 한 번에 주면, 완성된 코스웨어가 나옵니다.</p>
+    <p class="lead"><b>재료 3가지</b>(① 교과 요약 ② /exec 주소 ③ 템플릿)를 AI에게 한 번에 주면, 완성된 코스웨어가 나옵니다.</p>
 
     <div class="step">
       <h3 style="margin-top:0">먼저 템플릿을 준비하세요</h3>
@@ -395,6 +401,7 @@
 
 [템플릿]
 (여기에 수업_템플릿.html 전체를 붙여넣기)</textarea>
+      <div class="mobhint">↕ 상자 안에서 스크롤하면 전체 내용이 보입니다 · <b>복사</b> 버튼은 전체를 복사합니다</div>
     </div>
 
     <div class="note danger">
@@ -402,23 +409,42 @@
     </div>
 
     <div class="step">
-      <h3 style="margin-top:0">받은 코드를 저장하고 확인하기</h3>
-      <ol class="click">
-        <li>AI가 준 HTML 코드를 <b>전체 복사</b></li>
-        <li>메모장에 붙여넣고 <b>다른 이름으로 저장</b></li>
-        <li>파일 이름: <code>index.html</code> · 파일 형식: <b>모든 파일</b> · 인코딩: <b>UTF-8</b> <span style="color:var(--muted);font-size:13px">(index.html로 저장해야 배포 주소에서 바로 열립니다)</span></li>
-        <li>저장한 파일을 <b>더블클릭</b> → 브라우저에서 내 코스웨어가 열립니다 🎉</li>
-        <li>메모장에서 <span class="kbd">Ctrl</span>+<span class="kbd">F</span>로 <code>PASTE_WEBAPP_URL</code> 검색 → <b>안 나와야 정상</b>입니다<br>
-            <span style="color:var(--muted);font-size:13.5px">나온다면 AI가 주소를 안 넣은 것 → 그 부분을 2단계에서 받은 /exec 주소로 직접 바꾸고 저장</span></li>
-      </ol>
-      <div class="note warn">⚠️ 저장할 때 <b>인코딩을 UTF-8</b>로 하지 않으면 한글이 깨집니다.</div>
+      <h3 style="margin-top:0">받은 코드를 파일로 저장하기</h3>
+      <p style="margin:6px 0 10px;font-size:14px;color:var(--muted)">방법이 두 가지입니다. <b style="color:var(--ink)">먼저 ① 다운로드</b>를 시도해 보고, 버튼이 없으면 ② 복사해서 저장하세요.</p>
+
+      <div class="note ok" style="margin-top:0">
+        <b>① 다운로드 버튼이 있으면 (가장 쉬움)</b>
+        <ol class="click" style="margin-top:6px">
+          <li>AI가 준 코드 상자 위·아래에 <b>다운로드(Download)</b> 버튼이 있는지 보세요<br>
+              <span style="color:var(--muted);font-size:13.5px">클로드는 코드 위 <b>파일 이름 옆 ⬇️</b>, 챗지피티는 코드 상자 오른쪽 위에 있는 경우가 많습니다</span></li>
+          <li>눌러서 파일을 받고, <b>다운로드 폴더</b>에서 확인</li>
+          <li>파일 이름이 <code>index.html</code>이 아니면 → 파일 우클릭 → <b>이름 바꾸기</b> → <code>index.html</code></li>
+          <li>내 이름 폴더로 옮겨두기</li>
+        </ol>
+        <div style="margin-top:8px;font-size:13.5px;color:var(--muted)">💡 다운로드가 되면 인코딩(한글 깨짐) 걱정이 없어 더 안전합니다.</div>
+      </div>
+
+      <div class="note info">
+        <b>② 다운로드 버튼이 없으면 — 복사해서 저장</b>
+        <ol class="click" style="margin-top:6px">
+          <li>코드 상자 오른쪽 위 <b>복사 버튼</b>을 누르기 (없으면 드래그해서 <span class="kbd">Ctrl</span>+<span class="kbd">C</span>)</li>
+          <li><b>메모장</b>을 열어 붙여넣기 (<span class="kbd">Ctrl</span>+<span class="kbd">V</span>)</li>
+          <li><b>파일 → 다른 이름으로 저장</b></li>
+          <li>파일 이름 <code>index.html</code> · 파일 형식 <b>모든 파일</b> · 인코딩 <b>UTF-8</b></li>
+        </ol>
+        <div style="margin-top:8px;font-size:13.5px;color:var(--muted)">⚠️ 인코딩을 <b>UTF-8</b>로 하지 않으면 한글이 깨집니다. 파일 형식도 꼭 <b>모든 파일</b>로 바꾸세요(안 하면 <code>index.html.txt</code>가 됩니다).</div>
+      </div>
+
+      <div class="note warn">
+        ✅ <b>마지막 확인</b> — 저장한 <code>index.html</code>을 <b>더블클릭</b>하면 브라우저에서 내 코스웨어가 열립니다 🎉
+      </div>
     </div>
   </section>
 
   <!-- 4단계 -->
   <section id="s4">
     <h2><span class="n">4</span> 인터넷에 올리기 (배포)</h2>
-    <p class="lead">11:35–12:00 · 내 코스웨어에 주소(URL)를 만들어 줍니다.</p>
+    <p class="lead">내 코스웨어에 주소(URL)를 만들어 줍니다.</p>
 
     <div class="step">
       <h3 style="margin-top:0">① GitHub에 파일 올리기</h3>
@@ -448,7 +474,7 @@
   <!-- 5단계 -->
   <section id="s5">
     <h2><span class="n">5</span> 연결 확인 — 가장 중요한 순간</h2>
-    <p class="lead">12:00–12:15 · 학생처럼 직접 제출해 보고, 시트에 쌓이는지 확인합니다.</p>
+    <p class="lead">학생처럼 직접 제출해 보고, 시트에 쌓이는지 확인합니다.</p>
 
     <div class="step">
       <ol class="click">
@@ -489,7 +515,7 @@
   <!-- 6단계 -->
   <section id="s6">
     <h2><span class="n">6</span> 산출물 작성 (지도안 · 보고서)</h2>
-    <p class="lead">12:15–12:40 · 연수 후 제출할 서류를 미리 시작합니다.</p>
+    <p class="lead">연수 후 제출할 서류를 미리 시작합니다.</p>
 
     <div class="note danger">
       📸 <b>수업 전에 반드시 준비하세요 — 수업이 끝나면 되돌릴 수 없습니다.</b><br>
