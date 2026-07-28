@@ -209,8 +209,8 @@
     });
     f.addEventListener('submit', function(ev){
       ev.preventDefault();
-      if(!SCRIPT_URL || SCRIPT_URL==="PASTE_WEBAPP_URL" || !/^https?:\/\//.test(SCRIPT_URL)){
-        s.className='formstatus err'; s.textContent='⚠️ 아직 제출 주소가 설정되지 않았어요. 선생님께 알려주세요.'; return;
+      if(!SCRIPT_URL || !/^https?:\/\/.+\/exec$/.test(SCRIPT_URL)){
+        s.className='formstatus err'; s.textContent='⚠️ 아직 제출 주소가 설정되지 않았어요. (/exec 로 끝나는 주소여야 해요) 선생님께 알려주세요.'; return;
       }
       var btn = f.querySelector('.submitbtn');
       var body = new URLSearchParams(new FormData(f));
